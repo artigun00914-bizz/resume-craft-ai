@@ -7,12 +7,12 @@ function Editable({
   value,
   onChange,
   className,
-  as: Tag = "span",
+  as: Tag = "span" as any,
 }: {
   value: string;
   onChange: (v: string) => void;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: any;
 }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
