@@ -5,25 +5,97 @@ import FileSaver from "file-saver";
 const { saveAs } = FileSaver;
 import type { ResumeData } from "@/types/resume";
 
-export async function exportPDF(element: HTMLElement, name: string) {
-  const canvas = await html2canvas(element, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
-  const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  let heightLeft = imgHeight;
-  let position = 0;
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+// A4 in mm
+const A4_W = 210;
+const A4_H = 297;
+const MARGIN = 14;
+const CONTENT_W = A4_W - MARGIN * 2;
+const CONTENT_H = A4_H - MARGIN * 2;
+const GAP = 3;
+
+// Render width in px for off-screen clone (good print resolution)
+const RENDER_PX = 820;
+
+async function renderSection(el: HTMLElement): Promise<{ data: string; w: number; h: number }> {
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    backgroundColor: "#ffffff",
+    useCORS: true,
+    logging: false,
+  });
+  return { data: canvas.toDataURL("image/png"), w: canvas.width, h: canvas.height };
+}
+
+export async function exportPDF(source: HTMLElement, name: string) {
+  // Clone off-screen at fixed width so layout is stable & A4-friendly
+  const clone = source.cloneNode(true) as HTMLElement;
+  const stage = document.createElement("div");
+  stage.style.position = "fixed";
+  stage.style.left = "-10000px";
+  stage.style.top = "0";
+  stage.style.width = `${RENDER_PX}px`;
+  stage.style.background = "#ffffff";
+  stage.style.color = "#111827";
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  // Strip contentEditable so caret/outline doesn't render
+  clone.querySelectorAll("[contenteditable]").forEach((n) => {
+    (n as HTMLElement).removeAttribute("contenteditable");
+  });
+
+  try {
+    const sections = Array.from(clone.querySelectorAll<HTMLElement>("[data-pdf-section]"));
+    const targets: HTMLElement[] = sections.length ? sections : [clone];
+
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    let cursorY = MARGIN;
+    let first = true;
+
+    for (const section of targets) {
+      const { data, w, h } = await renderSection(section);
+      const heightMM = (h * CONTENT_W) / w;
+
+      if (heightMM <= CONTENT_H - (cursorY - MARGIN)) {
+        pdf.addImage(data, "PNG", MARGIN, cursorY, CONTENT_W, heightMM);
+        cursorY += heightMM + GAP;
+        first = false;
+      } else if (heightMM <= CONTENT_H) {
+        // Section fits on a fresh page
+        if (!first) pdf.addPage();
+        cursorY = MARGIN;
+        pdf.addImage(data, "PNG", MARGIN, cursorY, CONTENT_W, heightMM);
+        cursorY += heightMM + GAP;
+        first = false;
+      } else {
+        // Section taller than a page: slice it
+        const pageHpx = (CONTENT_H * w) / CONTENT_W;
+        let sy = 0;
+        while (sy < h) {
+          const sliceH = Math.min(pageHpx, h - sy);
+          const c = document.createElement("canvas");
+          c.width = w;
+          c.height = sliceH;
+          const ctx = c.getContext("2d")!;
+          const img = new Image();
+          img.src = data;
+          await new Promise((r) => (img.onload = r));
+          ctx.drawImage(img, 0, sy, w, sliceH, 0, 0, w, sliceH);
+          const sliceData = c.toDataURL("image/png");
+          const sliceMM = (sliceH * CONTENT_W) / w;
+          if (!first) pdf.addPage();
+          pdf.addImage(sliceData, "PNG", MARGIN, MARGIN, CONTENT_W, sliceMM);
+          first = false;
+          sy += sliceH;
+          cursorY = MARGIN + sliceMM + GAP;
+        }
+      }
+    }
+
+    pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
+  } finally {
+    document.body.removeChild(stage);
   }
-  pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
 }
 
 export async function exportDOCX(data: ResumeData, name: string) {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { ResumeData } from "@/types/resume";
 
 type Props = { data: ResumeData; onChange: (next: ResumeData) => void };
@@ -7,11 +7,13 @@ function Editable({
   value,
   onChange,
   className,
+  style,
   as: Tag = "span" as any,
 }: {
   value: string;
   onChange: (v: string) => void;
   className?: string;
+  style?: React.CSSProperties;
   as?: any;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -19,85 +21,126 @@ function Editable({
     if (ref.current && ref.current.innerText !== value) ref.current.innerText = value;
   }, [value]);
   return (
-    
     <Tag
       ref={ref}
       contentEditable
       suppressContentEditableWarning
       className={className}
+      style={style}
       onBlur={(e: any) => onChange(e.currentTarget.innerText)}
     />
   );
 }
 
+const ACCENT = "#1f2937";
+const RULE = "#d1d5db";
+const MUTED = "#4b5563";
+
 export function ResumeDocument({ data, onChange }: Props) {
   const update = <K extends keyof ResumeData>(k: K, v: ResumeData[K]) => onChange({ ...data, [k]: v });
 
   return (
-    <div className="resume-doc px-12 py-10 text-[13px] leading-relaxed">
+    <div
+      className="resume-doc"
+      style={{
+        padding: "44px 56px",
+        fontSize: 12.5,
+        lineHeight: 1.5,
+        color: "#111827",
+        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        background: "#ffffff",
+      }}
+    >
       {/* Header */}
-      <header className="mb-5">
-        <Editable as="h1" value={data.name} onChange={(v) => update("name", v)} className="text-5xl" />
-        <Editable as="div" value={data.headline} onChange={(v) => update("headline", v)} className="text-base text-gray-700 mt-1" />
-        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[12.5px] text-gray-700">
-          <Editable value={`✉ ${data.email}`} onChange={(v) => update("email", v.replace(/^✉\s*/, ""))} />
-          <Editable value={`☎ ${data.phone}`} onChange={(v) => update("phone", v.replace(/^☎\s*/, ""))} />
-          <Editable value={`📍 ${data.location}`} onChange={(v) => update("location", v.replace(/^📍\s*/, ""))} />
+      <header data-pdf-section style={{ marginBottom: 14 }}>
+        <Editable
+          as="h1"
+          value={data.name}
+          onChange={(v) => update("name", v)}
+          style={{ fontSize: 30, fontWeight: 700, letterSpacing: -0.5, margin: 0, color: ACCENT }}
+        />
+        <Editable
+          as="div"
+          value={data.headline}
+          onChange={(v) => update("headline", v)}
+          style={{ fontSize: 14, color: MUTED, marginTop: 2, fontWeight: 500 }}
+        />
+        <div style={{ marginTop: 8, fontSize: 11.5, color: MUTED }}>
+          <Editable value={data.email} onChange={(v) => update("email", v)} />
+          <span style={{ margin: "0 10px", color: RULE }}>•</span>
+          <Editable value={data.phone} onChange={(v) => update("phone", v)} />
+          <span style={{ margin: "0 10px", color: RULE }}>•</span>
+          <Editable value={data.location} onChange={(v) => update("location", v)} />
         </div>
-        <div className="border-t border-gray-300 mt-4" />
+        <div style={{ borderTop: `1px solid ${RULE}`, marginTop: 12 }} />
       </header>
 
       <Section title="Summary">
-        <Editable as="p" value={data.summary} onChange={(v) => update("summary", v)} className="text-[13px]" />
+        <Editable
+          as="p"
+          value={data.summary}
+          onChange={(v) => update("summary", v)}
+          style={{ margin: 0, textAlign: "justify" }}
+        />
       </Section>
 
       <Section title="Experience">
         {data.experience.map((exp, i) => (
-          <div key={i} className="mb-4">
-            <div className="flex justify-between items-baseline">
-              <Editable
-                value={exp.company}
-                onChange={(v) => {
-                  const next = [...data.experience];
-                  next[i] = { ...exp, company: v };
-                  update("experience", next);
-                }}
-                className="font-bold text-[14px]"
-              />
-              <Editable
-                value={exp.location}
-                onChange={(v) => {
-                  const next = [...data.experience];
-                  next[i] = { ...exp, location: v };
-                  update("experience", next);
-                }}
-                className="text-[12px] text-gray-600"
-              />
-            </div>
-            <div className="flex justify-between items-baseline">
-              <Editable
-                value={exp.title}
-                onChange={(v) => {
-                  const next = [...data.experience];
-                  next[i] = { ...exp, title: v };
-                  update("experience", next);
-                }}
-                className="italic text-[13px] text-gray-800"
-              />
-              <Editable
-                value={`${exp.start} – ${exp.end}`}
-                onChange={(v) => {
-                  const [s, e] = v.split(/\s*[–-]\s*/);
-                  const next = [...data.experience];
-                  next[i] = { ...exp, start: s ?? exp.start, end: e ?? exp.end };
-                  update("experience", next);
-                }}
-                className="text-[12px] text-gray-600"
-              />
-            </div>
-            <ul className="list-disc pl-5 mt-1.5 space-y-1">
+          <div key={i} style={{ marginBottom: 12 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <tbody>
+                <tr>
+                  <td style={{ textAlign: "left", padding: 0 }}>
+                    <Editable
+                      value={exp.company}
+                      onChange={(v) => {
+                        const next = [...data.experience];
+                        next[i] = { ...exp, company: v };
+                        update("experience", next);
+                      }}
+                      style={{ fontWeight: 700, fontSize: 13.5, color: ACCENT }}
+                    />
+                  </td>
+                  <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
+                    <Editable
+                      value={exp.location}
+                      onChange={(v) => {
+                        const next = [...data.experience];
+                        next[i] = { ...exp, location: v };
+                        update("experience", next);
+                      }}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "left", padding: 0 }}>
+                    <Editable
+                      value={exp.title}
+                      onChange={(v) => {
+                        const next = [...data.experience];
+                        next[i] = { ...exp, title: v };
+                        update("experience", next);
+                      }}
+                      style={{ fontStyle: "italic", fontSize: 12.5, color: "#374151" }}
+                    />
+                  </td>
+                  <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
+                    <Editable
+                      value={`${exp.start} – ${exp.end}`}
+                      onChange={(v) => {
+                        const [s, e] = v.split(/\s*[–-]\s*/);
+                        const next = [...data.experience];
+                        next[i] = { ...exp, start: s ?? exp.start, end: e ?? exp.end };
+                        update("experience", next);
+                      }}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ul style={{ margin: "6px 0 0 0", paddingLeft: 18 }}>
               {exp.bullets.map((b, j) => (
-                <li key={j}>
+                <li key={j} style={{ marginBottom: 3 }}>
                   <Editable
                     as="span"
                     value={b}
@@ -117,9 +160,9 @@ export function ResumeDocument({ data, onChange }: Props) {
       </Section>
 
       <Section title="Skills">
-        <ul className="space-y-1">
+        <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
           {data.skills.map((s, i) => (
-            <li key={i}>
+            <li key={i} style={{ marginBottom: 3 }}>
               <Editable
                 value={s.category}
                 onChange={(v) => {
@@ -127,7 +170,7 @@ export function ResumeDocument({ data, onChange }: Props) {
                   next[i] = { ...s, category: v };
                   update("skills", next);
                 }}
-                className="font-semibold"
+                style={{ fontWeight: 700, color: ACCENT }}
               />
               <span>: </span>
               <Editable
@@ -145,9 +188,9 @@ export function ResumeDocument({ data, onChange }: Props) {
 
       {data.projects.length > 0 && (
         <Section title="Projects">
-          <ul className="space-y-1.5">
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
             {data.projects.map((p, i) => (
-              <li key={i}>
+              <li key={i} style={{ marginBottom: 4 }}>
                 <Editable
                   value={p.name}
                   onChange={(v) => {
@@ -155,7 +198,7 @@ export function ResumeDocument({ data, onChange }: Props) {
                     next[i] = { ...p, name: v };
                     update("projects", next);
                   }}
-                  className="font-semibold"
+                  style={{ fontWeight: 700, color: ACCENT }}
                 />
                 <span>: </span>
                 <Editable
@@ -174,9 +217,9 @@ export function ResumeDocument({ data, onChange }: Props) {
 
       {data.certifications.length > 0 && (
         <Section title="Certifications">
-          <ul className="list-disc pl-5">
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
             {data.certifications.map((c, i) => (
-              <li key={i}>
+              <li key={i} style={{ marginBottom: 3 }}>
                 <Editable
                   value={c}
                   onChange={(v) => {
@@ -201,7 +244,7 @@ export function ResumeDocument({ data, onChange }: Props) {
                 next[i] = { ...ed, school: v };
                 update("education", next);
               }}
-              className="font-bold"
+              style={{ fontWeight: 700, color: ACCENT }}
             />
             <span> — </span>
             <Editable
@@ -230,8 +273,21 @@ export function ResumeDocument({ data, onChange }: Props) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-4">
-      <h2 className="text-[16px]">{title}</h2>
+    <section data-pdf-section style={{ marginBottom: 12 }}>
+      <h2
+        style={{
+          fontSize: 13,
+          fontWeight: 700,
+          letterSpacing: 1.5,
+          textTransform: "uppercase",
+          color: ACCENT,
+          margin: "0 0 6px 0",
+          paddingBottom: 3,
+          borderBottom: `1px solid ${RULE}`,
+        }}
+      >
+        {title}
+      </h2>
       <div>{children}</div>
     </section>
   );
