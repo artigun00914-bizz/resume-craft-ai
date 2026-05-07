@@ -19,7 +19,7 @@ function Editable({
     if (ref.current && ref.current.innerText !== value) ref.current.innerText = value;
   }, [value]);
   return (
-    // @ts-expect-error dynamic tag
+    
     <Tag
       ref={ref}
       contentEditable
