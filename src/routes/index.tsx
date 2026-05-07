@@ -169,7 +169,7 @@ function Index() {
               </Button>
             </div>
           </div>
-          <ProfileBar profile={profile} onChange={setProfile} />
+          <ProfileBar profile={profile} onChange={(p) => setProfile({ ...profile, ...p })} />
         </div>
       </header>
 
