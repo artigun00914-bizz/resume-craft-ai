@@ -1,7 +1,8 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from "docx";
-import { saveAs } from "file-saver";
+import FileSaver from "file-saver";
+const { saveAs } = FileSaver;
 import type { ResumeData } from "@/types/resume";
 
 export async function exportPDF(element: HTMLElement, name: string) {

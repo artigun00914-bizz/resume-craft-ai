@@ -10,7 +10,7 @@ import { ProfileBar } from "@/components/ProfileBar";
 import { ResumeDocument } from "@/components/ResumeDocument";
 import { GenerationProgress } from "@/components/GenerationProgress";
 import { DEFAULT_PROFILE, type ResumeData } from "@/types/resume";
-import { generateResume } from "@/server/resume.functions";
+import { generateResume } from "@/lib/resume.functions";
 import { exportPDF, exportDOCX } from "@/lib/resume-export";
 
 export const Route = createFileRoute("/")({
