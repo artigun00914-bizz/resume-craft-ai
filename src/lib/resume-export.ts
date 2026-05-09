@@ -38,6 +38,48 @@ async function renderSection(el: HTMLElement): Promise<{ data: string; w: number
   return { data: canvas.toDataURL("image/png"), w: canvas.width, h: canvas.height };
 }
 
+/**
+ * Mirror the PDF pagination algorithm using DOM measurements (no raster).
+ * Returns the indices of `[data-pdf-section]` elements that begin a NEW page
+ * in the PDF (i.e. excludes section 0). Index order matches DOM order.
+ */
+export function computePdfBreakpoints(source: HTMLElement): number[] {
+  const clone = source.cloneNode(true) as HTMLElement;
+  const stage = document.createElement("div");
+  stage.style.position = "fixed";
+  stage.style.left = "-10000px";
+  stage.style.top = "0";
+  stage.style.width = `${RENDER_PX}px`;
+  stage.style.background = "#ffffff";
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+  try {
+    const sections = Array.from(clone.querySelectorAll<HTMLElement>("[data-pdf-section]"));
+    const breaks: number[] = [];
+    let cursorY = MARGIN;
+    sections.forEach((el, i) => {
+      const heightMM = (el.offsetHeight * CONTENT_W) / RENDER_PX;
+      const remaining = CONTENT_H - (cursorY - MARGIN);
+      if (heightMM <= remaining) {
+        cursorY += heightMM + GAP;
+      } else if (heightMM <= CONTENT_H) {
+        // moves to a fresh page
+        if (i > 0) breaks.push(i);
+        cursorY = MARGIN + heightMM + GAP;
+      } else {
+        // taller than a page — sliced; counts as a page break before it
+        if (i > 0) breaks.push(i);
+        const pages = Math.ceil(heightMM / CONTENT_H);
+        const lastSliceMM = heightMM - (pages - 1) * CONTENT_H;
+        cursorY = MARGIN + lastSliceMM + GAP;
+      }
+    });
+    return breaks;
+  } finally {
+    document.body.removeChild(stage);
+  }
+}
+
 export async function exportPDF(source: HTMLElement, name: string) {
   // Clone off-screen at fixed width so layout is stable & A4-friendly
   const clone = source.cloneNode(true) as HTMLElement;
