@@ -124,6 +124,8 @@ export async function exportDOCX(data: ResumeData, name: string) {
     new Paragraph({
       spacing: { before: 220, after: 100 },
       border: RULE_BORDER,
+      keepNext: true,
+      keepLines: true,
       children: [
         new TextRun({
           text: text.toUpperCase(),
@@ -179,6 +181,8 @@ export async function exportDOCX(data: ResumeData, name: string) {
       new Paragraph({
         spacing: { before: 140 },
         tabStops: [RIGHT_TAB],
+        keepNext: true,
+        keepLines: true,
         children: [
           body(e.company, { bold: true, color: ACCENT_HEX }),
           new TextRun({ text: `\t${e.location}`, size: 19, font: FONT, color: MUTED_HEX }),
@@ -187,6 +191,8 @@ export async function exportDOCX(data: ResumeData, name: string) {
       new Paragraph({
         spacing: { after: 60 },
         tabStops: [RIGHT_TAB],
+        keepNext: true,
+        keepLines: true,
         children: [
           body(e.title, { italics: true, color: "374151" }),
           new TextRun({ text: `\t${e.start} – ${e.end}`, size: 19, font: FONT, color: MUTED_HEX }),
