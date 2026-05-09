@@ -11,7 +11,6 @@ import {
   BorderStyle,
   PageOrientation,
   LevelFormat,
-  PageBreak,
 } from "docx";
 import FileSaver from "file-saver";
 const { saveAs } = FileSaver;
@@ -36,48 +35,6 @@ async function renderSection(el: HTMLElement): Promise<{ data: string; w: number
     logging: false,
   });
   return { data: canvas.toDataURL("image/png"), w: canvas.width, h: canvas.height };
-}
-
-/**
- * Mirror the PDF pagination algorithm using DOM measurements (no raster).
- * Returns the indices of `[data-pdf-section]` elements that begin a NEW page
- * in the PDF (i.e. excludes section 0). Index order matches DOM order.
- */
-export function computePdfBreakpoints(source: HTMLElement): number[] {
-  const clone = source.cloneNode(true) as HTMLElement;
-  const stage = document.createElement("div");
-  stage.style.position = "fixed";
-  stage.style.left = "-10000px";
-  stage.style.top = "0";
-  stage.style.width = `${RENDER_PX}px`;
-  stage.style.background = "#ffffff";
-  stage.appendChild(clone);
-  document.body.appendChild(stage);
-  try {
-    const sections = Array.from(clone.querySelectorAll<HTMLElement>("[data-pdf-section]"));
-    const breaks: number[] = [];
-    let cursorY = MARGIN;
-    sections.forEach((el, i) => {
-      const heightMM = (el.offsetHeight * CONTENT_W) / RENDER_PX;
-      const remaining = CONTENT_H - (cursorY - MARGIN);
-      if (heightMM <= remaining) {
-        cursorY += heightMM + GAP;
-      } else if (heightMM <= CONTENT_H) {
-        // moves to a fresh page
-        if (i > 0) breaks.push(i);
-        cursorY = MARGIN + heightMM + GAP;
-      } else {
-        // taller than a page — sliced; counts as a page break before it
-        if (i > 0) breaks.push(i);
-        const pages = Math.ceil(heightMM / CONTENT_H);
-        const lastSliceMM = heightMM - (pages - 1) * CONTENT_H;
-        cursorY = MARGIN + lastSliceMM + GAP;
-      }
-    });
-    return breaks;
-  } finally {
-    document.body.removeChild(stage);
-  }
 }
 
 export async function exportPDF(source: HTMLElement, name: string) {
@@ -162,19 +119,11 @@ const RULE_BORDER = {
   bottom: { style: BorderStyle.SINGLE, size: 6, color: RULE_HEX, space: 4 },
 };
 
-export async function exportDOCX(
-  data: ResumeData,
-  name: string,
-  source?: HTMLElement | null,
-) {
-  // Mirror PDF page breaks when we have access to the live document
-  const breakSet = new Set<number>(source ? computePdfBreakpoints(source) : []);
-
+export async function exportDOCX(data: ResumeData, name: string) {
   const sectionHeading = (text: string) =>
     new Paragraph({
       spacing: { before: 220, after: 100 },
       border: RULE_BORDER,
-      keepNext: true,
       children: [
         new TextRun({
           text: text.toUpperCase(),
@@ -197,20 +146,7 @@ export async function exportDOCX(
       children: [body(text)],
     });
 
-  const children: Paragraph[] = [];
-
-  // Track which `[data-pdf-section]` we're emitting (DOM index parity with PDF)
-  let sectionIdx = 0;
-  const pushHeading = (text: string) => {
-    sectionIdx += 1;
-    if (breakSet.has(sectionIdx)) {
-      children.push(new Paragraph({ children: [new PageBreak()] }));
-    }
-    children.push(sectionHeading(text));
-  };
-
-  // Section 0: header
-  children.push(
+  const children: Paragraph[] = [
     new Paragraph({
       children: [new TextRun({ text: data.name, bold: true, size: 44, font: FONT, color: ACCENT_HEX })],
     }),
@@ -230,24 +166,19 @@ export async function exportDOCX(
         }),
       ],
     }),
-  );
-
-  pushHeading("Summary");
-  children.push(
+    sectionHeading("Summary"),
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       children: [body(data.summary)],
     }),
-  );
+    sectionHeading("Experience"),
+  ];
 
-  pushHeading("Experience");
   data.experience.forEach((e) => {
     children.push(
       new Paragraph({
         spacing: { before: 140 },
         tabStops: [RIGHT_TAB],
-        keepLines: true,
-        keepNext: true,
         children: [
           body(e.company, { bold: true, color: ACCENT_HEX }),
           new TextRun({ text: `\t${e.location}`, size: 19, font: FONT, color: MUTED_HEX }),
@@ -256,7 +187,6 @@ export async function exportDOCX(
       new Paragraph({
         spacing: { after: 60 },
         tabStops: [RIGHT_TAB],
-        keepNext: true,
         children: [
           body(e.title, { italics: true, color: "374151" }),
           new TextRun({ text: `\t${e.start} – ${e.end}`, size: 19, font: FONT, color: MUTED_HEX }),
@@ -266,7 +196,7 @@ export async function exportDOCX(
     e.bullets.forEach((b) => children.push(bullet(b)));
   });
 
-  pushHeading("Skills");
+  children.push(sectionHeading("Skills"));
   data.skills.forEach((s) =>
     children.push(
       new Paragraph({
@@ -280,7 +210,7 @@ export async function exportDOCX(
   );
 
   if (data.projects.length) {
-    pushHeading("Projects");
+    children.push(sectionHeading("Projects"));
     data.projects.forEach((p) =>
       children.push(
         new Paragraph({
@@ -293,11 +223,11 @@ export async function exportDOCX(
   }
 
   if (data.certifications.length) {
-    pushHeading("Certifications");
+    children.push(sectionHeading("Certifications"));
     data.certifications.forEach((c) => children.push(bullet(c)));
   }
 
-  pushHeading("Education");
+  children.push(sectionHeading("Education"));
   data.education.forEach((ed) =>
     children.push(
       new Paragraph({
@@ -308,7 +238,7 @@ export async function exportDOCX(
   );
 
   if (data.tools.length) {
-    pushHeading("Tools & Technologies");
+    children.push(sectionHeading("Tools & Technologies"));
     children.push(new Paragraph({ children: [body(data.tools.join("  •  "))] }));
   }
 

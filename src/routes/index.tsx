@@ -126,7 +126,7 @@ function Index() {
 
   const handleDOCX = async () => {
     if (!resume) return;
-    toast.promise(exportDOCX(resume, resume.name, docRef.current), {
+    toast.promise(exportDOCX(resume, resume.name), {
       loading: "Building DOCX…",
       success: "DOCX downloaded",
       error: "DOCX export failed",
