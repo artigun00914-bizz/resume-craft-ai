@@ -1,6 +1,17 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from "docx";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  AlignmentType,
+  TabStopType,
+  TabStopPosition,
+  BorderStyle,
+  PageOrientation,
+  LevelFormat,
+} from "docx";
 import FileSaver from "file-saver";
 const { saveAs } = FileSaver;
 import type { ResumeData } from "@/types/resume";
@@ -98,52 +109,87 @@ export async function exportPDF(source: HTMLElement, name: string) {
   }
 }
 
+// Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
+const FONT = "Helvetica";
+const ACCENT_HEX = "1F2937";
+const MUTED_HEX = "4B5563";
+const RULE_HEX = "D1D5DB";
+const RIGHT_TAB = { type: TabStopType.RIGHT, position: 10318 } as const;
+const RULE_BORDER = {
+  bottom: { style: BorderStyle.SINGLE, size: 6, color: RULE_HEX, space: 4 },
+};
+
 export async function exportDOCX(data: ResumeData, name: string) {
   const sectionHeading = (text: string) =>
     new Paragraph({
-      heading: HeadingLevel.HEADING_2,
-      spacing: { before: 240, after: 120 },
-      children: [new TextRun({ text, bold: true, color: "4F46E5", size: 26 })],
+      spacing: { before: 220, after: 100 },
+      border: RULE_BORDER,
+      children: [
+        new TextRun({
+          text: text.toUpperCase(),
+          bold: true,
+          size: 20,
+          color: ACCENT_HEX,
+          font: FONT,
+          characterSpacing: 30,
+        }),
+      ],
     });
+
+  const body = (text: string, opts: { bold?: boolean; italics?: boolean; color?: string } = {}) =>
+    new TextRun({ text, size: 21, font: FONT, ...opts });
 
   const bullet = (text: string) =>
     new Paragraph({
-      bullet: { level: 0 },
-      spacing: { after: 80 },
-      children: [new TextRun({ text, size: 22 })],
+      numbering: { reference: "bullets", level: 0 },
+      spacing: { after: 60 },
+      children: [body(text)],
     });
 
   const children: Paragraph[] = [
     new Paragraph({
-      alignment: AlignmentType.LEFT,
-      children: [new TextRun({ text: data.name, bold: true, size: 56 })],
+      children: [new TextRun({ text: data.name, bold: true, size: 44, font: FONT, color: ACCENT_HEX })],
     }),
-    new Paragraph({ children: [new TextRun({ text: data.headline, size: 26 })] }),
     new Paragraph({
-      spacing: { after: 200 },
+      spacing: { after: 80 },
+      children: [new TextRun({ text: data.headline, size: 24, font: FONT, color: MUTED_HEX, bold: true })],
+    }),
+    new Paragraph({
+      border: RULE_BORDER,
+      spacing: { after: 160 },
       children: [
-        new TextRun({ text: `${data.email}  •  ${data.phone}  •  ${data.location}`, size: 20, color: "555555" }),
+        new TextRun({
+          text: `${data.email}    •    ${data.phone}    •    ${data.location}`,
+          size: 19,
+          font: FONT,
+          color: MUTED_HEX,
+        }),
       ],
     }),
     sectionHeading("Summary"),
-    new Paragraph({ children: [new TextRun({ text: data.summary, size: 22 })] }),
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      children: [body(data.summary)],
+    }),
     sectionHeading("Experience"),
   ];
 
   data.experience.forEach((e) => {
     children.push(
       new Paragraph({
-        spacing: { before: 160 },
+        spacing: { before: 140 },
+        tabStops: [RIGHT_TAB],
         children: [
-          new TextRun({ text: `${e.company}`, bold: true, size: 24 }),
-          new TextRun({ text: `   ${e.location}`, size: 20, color: "777777" }),
+          body(e.company, { bold: true, color: ACCENT_HEX }),
+          new TextRun({ text: `\t${e.location}`, size: 19, font: FONT, color: MUTED_HEX }),
         ],
       }),
       new Paragraph({
-        spacing: { after: 80 },
+        spacing: { after: 60 },
+        tabStops: [RIGHT_TAB],
         children: [
-          new TextRun({ text: e.title, italics: true, size: 22 }),
-          new TextRun({ text: `   ${e.start} – ${e.end}`, size: 20, color: "777777" }),
+          body(e.title, { italics: true, color: "374151" }),
+          new TextRun({ text: `\t${e.start} – ${e.end}`, size: 19, font: FONT, color: MUTED_HEX }),
         ],
       }),
     );
@@ -154,10 +200,10 @@ export async function exportDOCX(data: ResumeData, name: string) {
   data.skills.forEach((s) =>
     children.push(
       new Paragraph({
-        spacing: { after: 60 },
+        spacing: { after: 40 },
         children: [
-          new TextRun({ text: `${s.category}: `, bold: true, size: 22 }),
-          new TextRun({ text: s.items, size: 22 }),
+          body(`${s.category}: `, { bold: true, color: ACCENT_HEX }),
+          body(s.items),
         ],
       }),
     ),
@@ -168,11 +214,9 @@ export async function exportDOCX(data: ResumeData, name: string) {
     data.projects.forEach((p) =>
       children.push(
         new Paragraph({
-          spacing: { after: 80 },
-          children: [
-            new TextRun({ text: `${p.name}: `, bold: true, size: 22 }),
-            new TextRun({ text: p.description, size: 22 }),
-          ],
+          numbering: { reference: "bullets", level: 0 },
+          spacing: { after: 60 },
+          children: [body(`${p.name}: `, { bold: true, color: ACCENT_HEX }), body(p.description)],
         }),
       ),
     );
@@ -187,20 +231,50 @@ export async function exportDOCX(data: ResumeData, name: string) {
   data.education.forEach((ed) =>
     children.push(
       new Paragraph({
-        children: [
-          new TextRun({ text: ed.school, bold: true, size: 22 }),
-          new TextRun({ text: ` — ${ed.degree}`, size: 22 }),
-        ],
+        spacing: { after: 40 },
+        children: [body(ed.school, { bold: true, color: ACCENT_HEX }), body(` — ${ed.degree}`)],
       }),
     ),
   );
 
   if (data.tools.length) {
     children.push(sectionHeading("Tools & Technologies"));
-    children.push(new Paragraph({ children: [new TextRun({ text: data.tools.join(" • "), size: 22 })] }));
+    children.push(new Paragraph({ children: [body(data.tools.join("  •  "))] }));
   }
 
-  const doc = new Document({ sections: [{ children }] });
+  const doc = new Document({
+    styles: {
+      default: { document: { run: { font: FONT, size: 21 } } },
+    },
+    numbering: {
+      config: [
+        {
+          reference: "bullets",
+          levels: [
+            {
+              level: 0,
+              format: LevelFormat.BULLET,
+              text: "•",
+              alignment: AlignmentType.LEFT,
+              style: { paragraph: { indent: { left: 360, hanging: 220 } } },
+            },
+          ],
+        },
+      ],
+    },
+    sections: [
+      {
+        properties: {
+          page: {
+            size: { width: 11906, height: 16838, orientation: PageOrientation.PORTRAIT },
+            margin: { top: 794, right: 794, bottom: 794, left: 794 },
+          },
+        },
+        children,
+      },
+    ],
+  });
+
   const blob = await Packer.toBlob(doc);
   saveAs(blob, `${name.replace(/\s+/g, "_")}_Resume.docx`);
 }
