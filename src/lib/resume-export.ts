@@ -124,6 +124,8 @@ export async function exportDOCX(data: ResumeData, name: string) {
     new Paragraph({
       spacing: { before: 220, after: 100 },
       border: RULE_BORDER,
+      keepNext: true,
+      keepLines: true,
       children: [
         new TextRun({
           text: text.toUpperCase(),
