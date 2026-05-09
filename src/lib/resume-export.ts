@@ -1,6 +1,17 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from "docx";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  AlignmentType,
+  TabStopType,
+  TabStopPosition,
+  BorderStyle,
+  PageOrientation,
+  LevelFormat,
+} from "docx";
 import FileSaver from "file-saver";
 const { saveAs } = FileSaver;
 import type { ResumeData } from "@/types/resume";
