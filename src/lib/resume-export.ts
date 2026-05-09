@@ -11,6 +11,7 @@ import {
   BorderStyle,
   PageOrientation,
   LevelFormat,
+  PageBreak,
 } from "docx";
 import FileSaver from "file-saver";
 const { saveAs } = FileSaver;
