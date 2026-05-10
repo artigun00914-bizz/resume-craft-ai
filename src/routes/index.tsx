@@ -252,6 +252,23 @@ function Index() {
               </div>
             </Card>
           )}
+
+          {resume?.coverLetter && (
+            <Card className="p-4 glass space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Cover Letter
+                </h3>
+                <Button size="sm" variant="outline" onClick={handleCoverLetter}>
+                  <Download className="h-3.5 w-3.5 mr-1" /> Download
+                </Button>
+              </div>
+              <div className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-[280px] overflow-y-auto pr-1">
+                {resume.coverLetter}
+              </div>
+            </Card>
+          )}
         </aside>
 
         {/* Right */}
