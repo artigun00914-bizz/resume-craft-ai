@@ -10,7 +10,6 @@ type Profile = {
   email: string;
   phone: string;
   location: string;
-  linkedin: string;
 };
 
 export function ProfileBar({ profile, onChange }: { profile: Profile; onChange: (p: Profile) => void }) {
@@ -55,13 +54,12 @@ export function ProfileBar({ profile, onChange }: { profile: Profile; onChange: 
   );
 
   return (
-    <div className="glass rounded-2xl p-4 grid grid-cols-2 md:grid-cols-6 gap-4 shadow-[var(--shadow-soft)]">
+    <div className="glass rounded-2xl p-4 grid grid-cols-2 md:grid-cols-5 gap-4 shadow-[var(--shadow-soft)]">
       <Field k="name" label="Name" />
       <Field k="headline" label="Headline" />
       <Field k="email" label="Email" />
       <Field k="phone" label="Phone" />
       <Field k="location" label="Location" />
-      <Field k="linkedin" label="LinkedIn" />
     </div>
   );
 }

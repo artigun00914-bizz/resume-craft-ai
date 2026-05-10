@@ -199,7 +199,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
       spacing: { after: 160 },
       children: [
         new TextRun({
-          text: [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join("    •    "),
+          text: `${data.email}    •    ${data.phone}    •    ${data.location}`,
           size: 19,
           font: FONT,
           color: MUTED_HEX,

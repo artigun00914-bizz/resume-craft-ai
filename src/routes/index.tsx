@@ -138,24 +138,11 @@ function Index() {
       toast.error("No cover letter generated yet");
       return;
     }
-    const contact = [resume.email, resume.phone, resume.location, resume.linkedin].filter(Boolean).join("  •  ");
+    const contact = `${resume.email}  •  ${resume.phone}  •  ${resume.location}`;
     toast.promise(
       exportCoverLetterPDF(resume.coverLetter, resume.name, resume.headline, contact),
       { loading: "Building cover letter…", success: "Cover letter downloaded", error: "Cover letter export failed" },
     );
-  };
-
-  const copyCoverLetter = async () => {
-    if (!resume?.coverLetter) {
-      toast.error("No cover letter generated yet");
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(resume.coverLetter);
-      toast.success("Cover letter copied");
-    } catch {
-      toast.error("Copy failed");
-    }
   };
 
   const copyText = () => {
@@ -273,14 +260,9 @@ function Index() {
                   <FileText className="h-4 w-4 text-primary" />
                   Cover Letter
                 </h3>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="ghost" onClick={copyCoverLetter}>
-                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={handleCoverLetter}>
-                    <Download className="h-3.5 w-3.5 mr-1" /> PDF
-                  </Button>
-                </div>
+                <Button size="sm" variant="outline" onClick={handleCoverLetter}>
+                  <Download className="h-3.5 w-3.5 mr-1" /> Download
+                </Button>
               </div>
               <div className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-[280px] overflow-y-auto pr-1">
                 {resume.coverLetter}
