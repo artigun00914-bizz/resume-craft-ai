@@ -294,7 +294,7 @@ function Index() {
                 disabled={!resume}
                 className="bg-[image:var(--gradient-primary)] hover:opacity-90 shadow-[var(--shadow-elegant)]"
               >
-                <Download className="h-4 w-4 mr-1" /> PDF
+                <Download className="h-4 w-4 mr-1" /> Resume PDF
               </Button>
             </div>
           </div>
