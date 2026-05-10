@@ -10,6 +10,7 @@ type Profile = {
   email: string;
   phone: string;
   location: string;
+  linkedin: string;
 };
 
 export function ProfileBar({ profile, onChange }: { profile: Profile; onChange: (p: Profile) => void }) {
