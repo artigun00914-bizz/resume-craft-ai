@@ -45,9 +45,9 @@ export function ResumeDocument({ data, onChange }: Props) {
       style={{
         padding: "44px 56px",
         fontSize: 12.5,
-        lineHeight: 1.5,
+        lineHeight: 1.55,
         color: "#111827",
-        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontFamily: 'Inter, "Helvetica Neue", Helvetica, Arial, sans-serif',
         background: "#ffffff",
       }}
     >
@@ -71,6 +71,12 @@ export function ResumeDocument({ data, onChange }: Props) {
           <Editable value={data.phone} onChange={(v) => update("phone", v)} />
           <span style={{ margin: "0 10px", color: RULE }}>•</span>
           <Editable value={data.location} onChange={(v) => update("location", v)} />
+          {data.linkedin ? (
+            <>
+              <span style={{ margin: "0 10px", color: RULE }}>•</span>
+              <Editable value={data.linkedin} onChange={(v) => update("linkedin", v)} />
+            </>
+          ) : null}
         </div>
         <div style={{ borderTop: `1px solid ${RULE}`, marginTop: 12 }} />
       </header>
