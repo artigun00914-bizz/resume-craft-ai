@@ -138,11 +138,24 @@ function Index() {
       toast.error("No cover letter generated yet");
       return;
     }
-    const contact = `${resume.email}  •  ${resume.phone}  •  ${resume.location}`;
+    const contact = [resume.email, resume.phone, resume.location, resume.linkedin].filter(Boolean).join("  •  ");
     toast.promise(
       exportCoverLetterPDF(resume.coverLetter, resume.name, resume.headline, contact),
       { loading: "Building cover letter…", success: "Cover letter downloaded", error: "Cover letter export failed" },
     );
+  };
+
+  const copyCoverLetter = async () => {
+    if (!resume?.coverLetter) {
+      toast.error("No cover letter generated yet");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(resume.coverLetter);
+      toast.success("Cover letter copied");
+    } catch {
+      toast.error("Copy failed");
+    }
   };
 
   const copyText = () => {
