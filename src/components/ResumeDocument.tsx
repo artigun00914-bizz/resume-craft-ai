@@ -291,3 +291,24 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     </section>
   );
 }
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <section data-pdf-section style={{ marginBottom: 6 }}>
+      <h2
+        style={{
+          fontSize: 13,
+          fontWeight: 700,
+          letterSpacing: 1.5,
+          textTransform: "uppercase",
+          color: ACCENT,
+          margin: 0,
+          paddingBottom: 3,
+          borderBottom: `1px solid ${RULE}`,
+        }}
+      >
+        {title}
+      </h2>
+    </section>
+  );
+}
