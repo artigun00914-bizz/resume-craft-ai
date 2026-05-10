@@ -133,6 +133,18 @@ function Index() {
     });
   };
 
+  const handleCoverLetter = async () => {
+    if (!resume?.coverLetter) {
+      toast.error("No cover letter generated yet");
+      return;
+    }
+    const contact = `${resume.email}  •  ${resume.phone}  •  ${resume.location}`;
+    toast.promise(
+      exportCoverLetterPDF(resume.coverLetter, resume.name, resume.headline, contact),
+      { loading: "Building cover letter…", success: "Cover letter downloaded", error: "Cover letter export failed" },
+    );
+  };
+
   const copyText = () => {
     if (!docRef.current) return;
     navigator.clipboard.writeText(docRef.current.innerText);
