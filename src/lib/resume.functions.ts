@@ -105,10 +105,11 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
             },
             certifications: { type: "array", items: { type: "string" } },
             tools: { type: "array", items: { type: "string" } },
+            coverLetter: { type: "string" },
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "experience", "skills", "projects", "certifications", "tools", "atsScore", "matchedKeywords"],
+          required: ["summary", "experience", "skills", "projects", "certifications", "tools", "coverLetter", "atsScore", "matchedKeywords"],
         },
       },
     };
