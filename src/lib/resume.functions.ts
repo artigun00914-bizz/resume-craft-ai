@@ -21,7 +21,6 @@ export type ResumeData = {
   projects: { name: string; description: string }[];
   certifications: string[];
   tools: string[];
-  coverLetter: string;
   atsScore: number;
   matchedKeywords: string[];
 };
@@ -30,13 +29,11 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Tone: confident, specific, conversational-but-professional. Avoid clichés like "results-driven", "synergy", "leveraged".
 - Every bullet starts with a strong action verb and includes a quantified outcome (%, $, time saved, scale).
 - Mirror exact keywords/technologies from the job description naturally (no stuffing).
-- Generate exactly 4 work experiences. The most recent MUST be at "Deep Sync" (Jan 2023 - Present), but the JOB TITLE for that role MUST be tailored to align with the target job description (e.g. "Senior Backend Engineer", "Staff ML Engineer", "Senior Frontend Engineer"). Same applies to the 3 prior invented companies — pick titles that map to the JD's seniority and discipline so the career arc reads as a natural progression toward this role.
-- Invent 3 prior companies with realistic names tailored to the JD industry; durations should be contiguous and span ~10-12 years total.
+- Generate exactly 4 work experiences. The most recent MUST be the user's "Recent Company" (Deep Sync, Jan 2023 - Present). Invent the other 3 prior companies with realistic names tailored to the JD industry; durations should be contiguous and span ~10-12 years total.
 - 5-6 bullets for current role, 4-5 for prior roles, 3 for the oldest.
 - Summary: 3-4 sentences, first-person, achievement-led.
-- Skills: generate 6-8 categories. Each category MUST list 6-10 specific, concrete items (frameworks, tools, methodologies, protocols) — NOT vague descriptors. Pull heavily from the job description. Example category: "Backend: Node.js, TypeScript, Go, gRPC, GraphQL, REST, Kafka, RabbitMQ, PostgreSQL, Redis".
+- Skills: 5-8 categories.
 - Projects: 2-3 relevant projects.
-- coverLetter: 3-4 short paragraphs, first-person, addressed to "Dear Hiring Manager,". Reference 2-3 specific requirements from the JD and tie them to concrete accomplishments. End with "Sincerely,\\n{candidate name}". No placeholders like [Company]. Plain text with \\n\\n between paragraphs.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
 
@@ -105,11 +102,10 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
             },
             certifications: { type: "array", items: { type: "string" } },
             tools: { type: "array", items: { type: "string" } },
-            coverLetter: { type: "string" },
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "experience", "skills", "projects", "certifications", "tools", "coverLetter", "atsScore", "matchedKeywords"],
+          required: ["summary", "experience", "skills", "projects", "certifications", "tools", "atsScore", "matchedKeywords"],
         },
       },
     };
