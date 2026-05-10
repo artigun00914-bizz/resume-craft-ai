@@ -106,6 +106,7 @@ export async function exportPDF(source: HTMLElement, name: string) {
     pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
   } finally {
     document.body.removeChild(stage);
+  }
 }
 
 export async function exportCoverLetterPDF(text: string, name: string, headline: string, contact: string) {
@@ -144,7 +145,6 @@ export async function exportCoverLetterPDF(text: string, name: string, headline:
     y += 4;
   }
   pdf.save(`${name.replace(/\s+/g, "_")}_Cover_Letter.pdf`);
-}
 }
 
 // Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
