@@ -106,7 +106,45 @@ export async function exportPDF(source: HTMLElement, name: string) {
     pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
   } finally {
     document.body.removeChild(stage);
+}
+
+export async function exportCoverLetterPDF(text: string, name: string, headline: string, contact: string) {
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(20);
+  pdf.setTextColor(31, 41, 55);
+  pdf.text(name, MARGIN, MARGIN + 4);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(11);
+  pdf.setTextColor(75, 85, 99);
+  pdf.text(headline, MARGIN, MARGIN + 11);
+  pdf.text(contact, MARGIN, MARGIN + 17);
+  pdf.setDrawColor(209, 213, 219);
+  pdf.line(MARGIN, MARGIN + 21, A4_W - MARGIN, MARGIN + 21);
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(11);
+  pdf.setTextColor(17, 24, 39);
+  const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  let y = MARGIN + 30;
+  pdf.text(today, MARGIN, y);
+  y += 8;
+
+  const paragraphs = text.split(/\n\s*\n/);
+  for (const p of paragraphs) {
+    const lines = pdf.splitTextToSize(p.trim(), CONTENT_W);
+    for (const line of lines) {
+      if (y > A4_H - MARGIN) {
+        pdf.addPage();
+        y = MARGIN;
+      }
+      pdf.text(line, MARGIN, y);
+      y += 6;
+    }
+    y += 4;
   }
+  pdf.save(`${name.replace(/\s+/g, "_")}_Cover_Letter.pdf`);
+}
 }
 
 // Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
