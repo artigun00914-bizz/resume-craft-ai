@@ -273,9 +273,14 @@ function Index() {
                   <FileText className="h-4 w-4 text-primary" />
                   Cover Letter
                 </h3>
-                <Button size="sm" variant="outline" onClick={handleCoverLetter}>
-                  <Download className="h-3.5 w-3.5 mr-1" /> Download
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="ghost" onClick={copyCoverLetter}>
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={handleCoverLetter}>
+                    <Download className="h-3.5 w-3.5 mr-1" /> PDF
+                  </Button>
+                </div>
               </div>
               <div className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-[280px] overflow-y-auto pr-1">
                 {resume.coverLetter}
