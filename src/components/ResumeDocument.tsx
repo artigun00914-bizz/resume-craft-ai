@@ -84,80 +84,79 @@ export function ResumeDocument({ data, onChange }: Props) {
         />
       </Section>
 
-      <Section title="Experience">
-        {data.experience.map((exp, i) => (
-          <div key={i} style={{ marginBottom: 12 }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <tbody>
-                <tr>
-                  <td style={{ textAlign: "left", padding: 0 }}>
-                    <Editable
-                      value={exp.company}
-                      onChange={(v) => {
-                        const next = [...data.experience];
-                        next[i] = { ...exp, company: v };
-                        update("experience", next);
-                      }}
-                      style={{ fontWeight: 700, fontSize: 13.5, color: ACCENT }}
-                    />
-                  </td>
-                  <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
-                    <Editable
-                      value={exp.location}
-                      onChange={(v) => {
-                        const next = [...data.experience];
-                        next[i] = { ...exp, location: v };
-                        update("experience", next);
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ textAlign: "left", padding: 0 }}>
-                    <Editable
-                      value={exp.title}
-                      onChange={(v) => {
-                        const next = [...data.experience];
-                        next[i] = { ...exp, title: v };
-                        update("experience", next);
-                      }}
-                      style={{ fontStyle: "italic", fontSize: 12.5, color: "#374151" }}
-                    />
-                  </td>
-                  <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
-                    <Editable
-                      value={`${exp.start} – ${exp.end}`}
-                      onChange={(v) => {
-                        const [s, e] = v.split(/\s*[–-]\s*/);
-                        const next = [...data.experience];
-                        next[i] = { ...exp, start: s ?? exp.start, end: e ?? exp.end };
-                        update("experience", next);
-                      }}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <ul style={{ margin: "6px 0 0 0", paddingLeft: 18 }}>
-              {exp.bullets.map((b, j) => (
-                <li key={j} style={{ marginBottom: 3 }}>
+      <SectionHeader title="Experience" />
+      {data.experience.map((exp, i) => (
+        <section data-pdf-section key={i} style={{ marginBottom: 12 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <tbody>
+              <tr>
+                <td style={{ textAlign: "left", padding: 0 }}>
                   <Editable
-                    as="span"
-                    value={b}
+                    value={exp.company}
                     onChange={(v) => {
                       const next = [...data.experience];
-                      const bullets = [...exp.bullets];
-                      bullets[j] = v;
-                      next[i] = { ...exp, bullets };
+                      next[i] = { ...exp, company: v };
+                      update("experience", next);
+                    }}
+                    style={{ fontWeight: 700, fontSize: 13.5, color: ACCENT }}
+                  />
+                </td>
+                <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
+                  <Editable
+                    value={exp.location}
+                    onChange={(v) => {
+                      const next = [...data.experience];
+                      next[i] = { ...exp, location: v };
                       update("experience", next);
                     }}
                   />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </Section>
+                </td>
+              </tr>
+              <tr>
+                <td style={{ textAlign: "left", padding: 0 }}>
+                  <Editable
+                    value={exp.title}
+                    onChange={(v) => {
+                      const next = [...data.experience];
+                      next[i] = { ...exp, title: v };
+                      update("experience", next);
+                    }}
+                    style={{ fontStyle: "italic", fontSize: 12.5, color: "#374151" }}
+                  />
+                </td>
+                <td style={{ textAlign: "right", padding: 0, fontSize: 11.5, color: MUTED, whiteSpace: "nowrap" }}>
+                  <Editable
+                    value={`${exp.start} – ${exp.end}`}
+                    onChange={(v) => {
+                      const [s, e] = v.split(/\s*[–-]\s*/);
+                      const next = [...data.experience];
+                      next[i] = { ...exp, start: s ?? exp.start, end: e ?? exp.end };
+                      update("experience", next);
+                    }}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ul style={{ margin: "6px 0 0 0", paddingLeft: 18 }}>
+            {exp.bullets.map((b, j) => (
+              <li key={j} style={{ marginBottom: 3 }}>
+                <Editable
+                  as="span"
+                  value={b}
+                  onChange={(v) => {
+                    const next = [...data.experience];
+                    const bullets = [...exp.bullets];
+                    bullets[j] = v;
+                    next[i] = { ...exp, bullets };
+                    update("experience", next);
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
 
       <Section title="Skills">
         <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
@@ -289,6 +288,27 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {title}
       </h2>
       <div>{children}</div>
+    </section>
+  );
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <section data-pdf-section style={{ marginBottom: 6 }}>
+      <h2
+        style={{
+          fontSize: 13,
+          fontWeight: 700,
+          letterSpacing: 1.5,
+          textTransform: "uppercase",
+          color: ACCENT,
+          margin: 0,
+          paddingBottom: 3,
+          borderBottom: `1px solid ${RULE}`,
+        }}
+      >
+        {title}
+      </h2>
     </section>
   );
 }

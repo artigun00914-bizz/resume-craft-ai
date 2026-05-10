@@ -26,6 +26,7 @@ export type ResumeData = {
   projects: Project[];
   certifications: string[];
   tools: string[];
+  coverLetter: string;
   atsScore: number;
   matchedKeywords: string[];
 };

@@ -11,7 +11,7 @@ import { ResumeDocument } from "@/components/ResumeDocument";
 import { GenerationProgress } from "@/components/GenerationProgress";
 import { DEFAULT_PROFILE, type ResumeData } from "@/types/resume";
 import { generateResume } from "@/lib/resume.functions";
-import { exportPDF, exportDOCX } from "@/lib/resume-export";
+import { exportPDF, exportDOCX, exportCoverLetterPDF } from "@/lib/resume-export";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -133,6 +133,18 @@ function Index() {
     });
   };
 
+  const handleCoverLetter = async () => {
+    if (!resume?.coverLetter) {
+      toast.error("No cover letter generated yet");
+      return;
+    }
+    const contact = `${resume.email}  •  ${resume.phone}  •  ${resume.location}`;
+    toast.promise(
+      exportCoverLetterPDF(resume.coverLetter, resume.name, resume.headline, contact),
+      { loading: "Building cover letter…", success: "Cover letter downloaded", error: "Cover letter export failed" },
+    );
+  };
+
   const copyText = () => {
     if (!docRef.current) return;
     navigator.clipboard.writeText(docRef.current.innerText);
@@ -240,6 +252,23 @@ function Index() {
               </div>
             </Card>
           )}
+
+          {resume?.coverLetter && (
+            <Card className="p-4 glass space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Cover Letter
+                </h3>
+                <Button size="sm" variant="outline" onClick={handleCoverLetter}>
+                  <Download className="h-3.5 w-3.5 mr-1" /> Download
+                </Button>
+              </div>
+              <div className="text-[12px] leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-[280px] overflow-y-auto pr-1">
+                {resume.coverLetter}
+              </div>
+            </Card>
+          )}
         </aside>
 
         {/* Right */}
@@ -265,7 +294,7 @@ function Index() {
                 disabled={!resume}
                 className="bg-[image:var(--gradient-primary)] hover:opacity-90 shadow-[var(--shadow-elegant)]"
               >
-                <Download className="h-4 w-4 mr-1" /> PDF
+                <Download className="h-4 w-4 mr-1" /> Resume PDF
               </Button>
             </div>
           </div>
