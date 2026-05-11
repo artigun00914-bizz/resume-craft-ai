@@ -116,8 +116,8 @@ function Index() {
   };
 
   const handlePDF = async () => {
-    if (!docRef.current || !resume) return;
-    toast.promise(exportPDF(docRef.current, resume.name), {
+    if (!resume) return;
+    toast.promise(exportPDF(resume, resume.name), {
       loading: "Building PDF…",
       success: "PDF downloaded",
       error: "PDF export failed",
