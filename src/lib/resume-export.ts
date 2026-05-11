@@ -20,92 +20,182 @@ const A4_W = 210;
 const A4_H = 297;
 const MARGIN = 14;
 const CONTENT_W = A4_W - MARGIN * 2;
-const CONTENT_H = A4_H - MARGIN * 2;
-const GAP = 3;
 
-// Render width in px for off-screen clone (good print resolution)
-const RENDER_PX = 820;
+type RGB = [number, number, number];
+const ACCENT: RGB = [31, 41, 55];
+const MUTED: RGB = [75, 85, 99];
+const RULE: RGB = [209, 213, 219];
+const BODY: RGB = [17, 24, 39];
 
-async function renderSection(el: HTMLElement): Promise<{ data: string; w: number; h: number }> {
-  const canvas = await html2canvas(el, {
-    scale: 2,
-    backgroundColor: "#ffffff",
-    useCORS: true,
-    logging: false,
-  });
-  return { data: canvas.toDataURL("image/png"), w: canvas.width, h: canvas.height };
-}
+export async function exportPDF(data: ResumeData, name: string) {
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  pdf.setFont("helvetica", "normal");
 
-export async function exportPDF(source: HTMLElement, name: string) {
-  // Clone off-screen at fixed width so layout is stable & A4-friendly
-  const clone = source.cloneNode(true) as HTMLElement;
-  const stage = document.createElement("div");
-  stage.style.position = "fixed";
-  stage.style.left = "-10000px";
-  stage.style.top = "0";
-  stage.style.width = `${RENDER_PX}px`;
-  stage.style.background = "#ffffff";
-  stage.style.color = "#111827";
-  stage.appendChild(clone);
-  document.body.appendChild(stage);
+  let y = MARGIN;
 
-  // Strip contentEditable so caret/outline doesn't render
-  clone.querySelectorAll("[contenteditable]").forEach((n) => {
-    (n as HTMLElement).removeAttribute("contenteditable");
-  });
-
-  try {
-    const sections = Array.from(clone.querySelectorAll<HTMLElement>("[data-pdf-section]"));
-    const targets: HTMLElement[] = sections.length ? sections : [clone];
-
-    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    let cursorY = MARGIN;
-    let first = true;
-
-    for (const section of targets) {
-      const { data, w, h } = await renderSection(section);
-      const heightMM = (h * CONTENT_W) / w;
-
-      if (heightMM <= CONTENT_H - (cursorY - MARGIN)) {
-        pdf.addImage(data, "PNG", MARGIN, cursorY, CONTENT_W, heightMM);
-        cursorY += heightMM + GAP;
-        first = false;
-      } else if (heightMM <= CONTENT_H) {
-        // Section fits on a fresh page
-        if (!first) pdf.addPage();
-        cursorY = MARGIN;
-        pdf.addImage(data, "PNG", MARGIN, cursorY, CONTENT_W, heightMM);
-        cursorY += heightMM + GAP;
-        first = false;
-      } else {
-        // Section taller than a page: slice it
-        const pageHpx = (CONTENT_H * w) / CONTENT_W;
-        let sy = 0;
-        while (sy < h) {
-          const sliceH = Math.min(pageHpx, h - sy);
-          const c = document.createElement("canvas");
-          c.width = w;
-          c.height = sliceH;
-          const ctx = c.getContext("2d")!;
-          const img = new Image();
-          img.src = data;
-          await new Promise((r) => (img.onload = r));
-          ctx.drawImage(img, 0, sy, w, sliceH, 0, 0, w, sliceH);
-          const sliceData = c.toDataURL("image/png");
-          const sliceMM = (sliceH * CONTENT_W) / w;
-          if (!first) pdf.addPage();
-          pdf.addImage(sliceData, "PNG", MARGIN, MARGIN, CONTENT_W, sliceMM);
-          first = false;
-          sy += sliceH;
-          cursorY = MARGIN + sliceMM + GAP;
-        }
-      }
+  const ensure = (need: number) => {
+    if (y + need > A4_H - MARGIN) {
+      pdf.addPage();
+      y = MARGIN;
     }
+  };
 
-    pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
-  } finally {
-    document.body.removeChild(stage);
+  const setColor = (c: RGB) => pdf.setTextColor(c[0], c[1], c[2]);
+
+  const text = (
+    str: string,
+    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "justify"; maxW?: number; lineHeight?: number } = {}
+  ) => {
+    const size = opts.size ?? 10;
+    const style = opts.style ?? "normal";
+    const color = opts.color ?? BODY;
+    const x = opts.x ?? MARGIN;
+    const maxW = opts.maxW ?? CONTENT_W;
+    const lh = opts.lineHeight ?? 1.35;
+    pdf.setFont("helvetica", style);
+    pdf.setFontSize(size);
+    setColor(color);
+    const lines = pdf.splitTextToSize(str, maxW) as string[];
+    const lineH = (size * lh) / 2.83465; // pt -> mm
+    for (const line of lines) {
+      ensure(lineH);
+      pdf.text(line, x, y, {
+        align: opts.align === "right" ? "right" : opts.align === "justify" ? "justify" : "left",
+        maxWidth: maxW,
+      });
+      y += lineH;
+    }
+  };
+
+  const rule = (gap = 1.5) => {
+    ensure(gap + 0.3);
+    pdf.setDrawColor(RULE[0], RULE[1], RULE[2]);
+    pdf.setLineWidth(0.2);
+    pdf.line(MARGIN, y + gap, A4_W - MARGIN, y + gap);
+    y += gap + 1.5;
+  };
+
+  const heading = (label: string) => {
+    y += 2;
+    ensure(8);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    setColor(ACCENT);
+    pdf.text(label.toUpperCase(), MARGIN, y, { charSpace: 0.6 });
+    y += 1.5;
+    pdf.setDrawColor(RULE[0], RULE[1], RULE[2]);
+    pdf.setLineWidth(0.2);
+    pdf.line(MARGIN, y, A4_W - MARGIN, y);
+    y += 3;
+  };
+
+  const row = (left: string, right: string, opts: { leftStyle?: "bold" | "italic" | "normal"; leftSize?: number; leftColor?: RGB; rightSize?: number; rightColor?: RGB } = {}) => {
+    const leftSize = opts.leftSize ?? 11;
+    const rightSize = opts.rightSize ?? 9.5;
+    const leftStyle = opts.leftStyle ?? "bold";
+    const leftColor = opts.leftColor ?? ACCENT;
+    const rightColor = opts.rightColor ?? MUTED;
+    const lineH = (Math.max(leftSize, rightSize) * 1.35) / 2.83465;
+    ensure(lineH);
+    pdf.setFont("helvetica", leftStyle);
+    pdf.setFontSize(leftSize);
+    setColor(leftColor);
+    pdf.text(left, MARGIN, y);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(rightSize);
+    setColor(rightColor);
+    pdf.text(right, A4_W - MARGIN, y, { align: "right" });
+    y += lineH;
+  };
+
+  const bullet = (str: string) => {
+    const size = 10;
+    const lh = 1.4;
+    const lineH = (size * lh) / 2.83465;
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(size);
+    setColor(BODY);
+    const indent = 4;
+    const lines = pdf.splitTextToSize(str, CONTENT_W - indent) as string[];
+    lines.forEach((line, i) => {
+      ensure(lineH);
+      if (i === 0) pdf.text("•", MARGIN + 1, y);
+      pdf.text(line, MARGIN + indent, y);
+      y += lineH;
+    });
+  };
+
+  // Header
+  text(data.name, { size: 22, style: "bold", color: ACCENT });
+  text(data.headline, { size: 11, style: "bold", color: MUTED });
+  y += 1;
+  text(`${data.email}   •   ${data.phone}   •   ${data.location}`, { size: 9.5, color: MUTED });
+  rule();
+
+  heading("Summary");
+  text(data.summary, { size: 10, align: "justify" });
+
+  heading("Experience");
+  data.experience.forEach((e) => {
+    y += 1;
+    row(e.company, e.location);
+    row(e.title, `${e.start} – ${e.end}`, { leftStyle: "italic", leftSize: 10, leftColor: [55, 65, 81], rightSize: 9.5 });
+    y += 0.5;
+    e.bullets.forEach((b) => bullet(b));
+  });
+
+  heading("Skills");
+  data.skills.forEach((s) => {
+    const lineH = (10 * 1.4) / 2.83465;
+    ensure(lineH);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    setColor(ACCENT);
+    const label = `${s.category}: `;
+    pdf.text(label, MARGIN, y);
+    const labelW = pdf.getTextWidth(label);
+    pdf.setFont("helvetica", "normal");
+    setColor(BODY);
+    const lines = pdf.splitTextToSize(s.items, CONTENT_W - labelW) as string[];
+    lines.forEach((line, i) => {
+      if (i > 0) ensure(lineH);
+      pdf.text(line, MARGIN + (i === 0 ? labelW : 0), y);
+      if (i < lines.length - 1) y += lineH;
+    });
+    y += lineH;
+  });
+
+  if (data.projects.length) {
+    heading("Projects");
+    data.projects.forEach((p) => bullet(`${p.name}: ${p.description}`));
   }
+
+  if (data.certifications.length) {
+    heading("Certifications");
+    data.certifications.forEach((c) => bullet(c));
+  }
+
+  heading("Education");
+  data.education.forEach((ed) => {
+    const lineH = (10 * 1.4) / 2.83465;
+    ensure(lineH);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(10);
+    setColor(ACCENT);
+    pdf.text(ed.school, MARGIN, y);
+    const w = pdf.getTextWidth(ed.school);
+    pdf.setFont("helvetica", "normal");
+    setColor(BODY);
+    pdf.text(` — ${ed.degree}`, MARGIN + w, y);
+    y += lineH;
+  });
+
+  if (data.tools.length) {
+    heading("Tools & Technologies");
+    text(data.tools.join("  •  "), { size: 10 });
+  }
+
+  pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
 }
 
 // Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
