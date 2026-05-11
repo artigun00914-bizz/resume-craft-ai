@@ -129,7 +129,8 @@ export async function exportPDF(data: ResumeData, name: string) {
   text(data.name, { size: 22, style: "bold", color: ACCENT });
   text(data.headline, { size: 11, style: "bold", color: MUTED });
   y += 1;
-  text(`${data.email}   •   ${data.phone}   •   ${data.location}`, { size: 9.5, color: MUTED });
+  const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
+  text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
   rule();
 
   heading("Summary");
@@ -250,7 +251,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
       spacing: { after: 160 },
       children: [
         new TextRun({
-          text: `${data.email}    •    ${data.phone}    •    ${data.location}`,
+          text: [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join("    •    "),
           size: 19,
           font: FONT,
           color: MUTED_HEX,

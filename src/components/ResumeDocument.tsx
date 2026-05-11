@@ -71,6 +71,12 @@ export function ResumeDocument({ data, onChange }: Props) {
           <Editable value={data.phone} onChange={(v) => update("phone", v)} />
           <span style={{ margin: "0 10px", color: RULE }}>•</span>
           <Editable value={data.location} onChange={(v) => update("location", v)} />
+          {data.linkedin !== undefined && (
+            <>
+              <span style={{ margin: "0 10px", color: RULE }}>•</span>
+              <Editable value={data.linkedin} onChange={(v) => update("linkedin", v)} />
+            </>
+          )}
         </div>
         <div style={{ borderTop: `1px solid ${RULE}`, marginTop: 12 }} />
       </header>
