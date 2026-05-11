@@ -19,6 +19,7 @@ export type ResumeData = {
   email: string;
   phone: string;
   location: string;
+  linkedin?: string;
   summary: string;
   experience: Experience[];
   skills: SkillGroup[];
@@ -36,6 +37,7 @@ export const DEFAULT_PROFILE = {
   email: "mathaey_senit4@outlook.com",
   phone: "+1 (986) 255-1098",
   location: "San Antonio, TX, US",
+  linkedin: "linkedin.com/in/arthur-faison-82058425",
   education: [
     {
       school: "University of Texas at San Antonio",
