@@ -287,6 +287,14 @@ function Index() {
               >
                 <Download className="h-4 w-4 mr-1" /> PDF
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCoverLetter}
+                disabled={!resume || !jd.trim()}
+              >
+                <FileText className="h-4 w-4 mr-1" /> Cover Letter
+              </Button>
             </div>
           </div>
 
