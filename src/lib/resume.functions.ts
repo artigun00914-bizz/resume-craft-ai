@@ -55,7 +55,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Phone: ${data.profile.phone}
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
-- Most recent company (must appear first): Deep Sync, Senior Software Engineer, Jan 2023 – Present
+- Most recent company (must appear first): Deep Sync (Redmond, WA), Senior Software Engineer, Jan 2023 – Present
 - Generate 3 additional prior companies tailored to the JD's industry/tech.
 
 Tailor every bullet to the job description above. Return JSON via the tool.`;
