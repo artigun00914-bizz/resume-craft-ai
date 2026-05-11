@@ -133,6 +133,26 @@ function Index() {
     });
   };
 
+  const handleCoverLetter = async () => {
+    if (!resume) return;
+    if (!jd.trim()) {
+      toast.error("Paste the job description first");
+      return;
+    }
+    await toast.promise(
+      (async () => {
+        const { letter } = await generateCoverLetter({ data: { jobDescription: jd, resume } });
+        if (!letter) throw new Error("Empty cover letter");
+        await exportCoverLetterPDF(resume, letter, resume.name);
+      })(),
+      {
+        loading: "Writing cover letter…",
+        success: "Cover letter downloaded",
+        error: (e) => e?.message ?? "Cover letter failed",
+      },
+    );
+  };
+
   const copyText = () => {
     if (!docRef.current) return;
     navigator.clipboard.writeText(docRef.current.innerText);
