@@ -42,7 +42,13 @@ function Index() {
       const p = localStorage.getItem(PROFILE_KEY);
       if (p) setProfile(JSON.parse(p));
       const r = localStorage.getItem(STORAGE_KEY);
-      if (r) setResume(JSON.parse(r));
+      if (r) {
+        const parsed: ResumeData = JSON.parse(r);
+        parsed.experience = parsed.experience?.map((e) =>
+          e.company?.toLowerCase().includes("deep sync") ? { ...e, location: "Redmond, WA" } : e,
+        );
+        setResume(parsed);
+      }
     } catch {}
   }, []);
 
