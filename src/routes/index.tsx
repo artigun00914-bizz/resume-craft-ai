@@ -25,6 +25,16 @@ export const Route = createFileRoute("/")({
 
 const STORAGE_KEY = "ai-resume:v1";
 const PROFILE_KEY = "ai-resume:profile:v1";
+const DEEP_SYNC_LOCATION = "Redmond, WA";
+
+function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
+  return {
+    ...data,
+    experience: data.experience?.map((e) =>
+      e.company?.toLowerCase().includes("deep sync") ? { ...e, location: DEEP_SYNC_LOCATION } : e,
+    ) ?? [],
+  };
+}
 
 function Index() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
@@ -44,10 +54,7 @@ function Index() {
       const r = localStorage.getItem(STORAGE_KEY);
       if (r) {
         const parsed: ResumeData = JSON.parse(r);
-        parsed.experience = parsed.experience?.map((e) =>
-          e.company?.toLowerCase().includes("deep sync") ? { ...e, location: "Redmond, WA" } : e,
-        );
-        setResume(parsed);
+        setResume(normalizeDeepSyncLocation(parsed));
       }
     } catch {}
   }, []);
@@ -68,7 +75,7 @@ function Index() {
     setResume((prev) => {
       if (prev) setHistory((h) => [...h.slice(-30), prev]);
       setFuture([]);
-      return next;
+      return normalizeDeepSyncLocation(next);
     });
   };
 
@@ -112,7 +119,7 @@ function Index() {
       };
       setHistory([]);
       setFuture([]);
-      setResume(full);
+      setResume(normalizeDeepSyncLocation(full));
       toast.success(`Resume generated • ATS Score ${full.atsScore}`);
     } catch (e: any) {
       toast.error(e?.message ?? "Generation failed");
