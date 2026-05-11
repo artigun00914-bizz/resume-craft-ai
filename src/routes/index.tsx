@@ -30,9 +30,12 @@ const DEEP_SYNC_LOCATION = "Redmond, WA";
 function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
   return {
     ...data,
-    experience: data.experience?.map((e) =>
-      e.company?.toLowerCase().includes("deep sync") ? { ...e, location: DEEP_SYNC_LOCATION } : e,
-    ) ?? [],
+    experience:
+      data.experience?.map((e) =>
+        e.company?.toLowerCase().includes("deep sync")
+          ? { ...e, location: DEEP_SYNC_LOCATION }
+          : e,
+      ) ?? [],
   };
 }
 
