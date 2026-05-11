@@ -137,3 +137,51 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
     const args = JSON.parse(call.function.arguments);
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });
+
+export const generateCoverLetter = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => data as { jobDescription: string; resume: ResumeData })
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY not set");
+
+    const topBullets = data.resume.experience
+      .slice(0, 2)
+      .flatMap((e) => e.bullets.slice(0, 3))
+      .join("\n- ");
+
+    const prompt = `Write a concise 3-4 sentence cover letter (first-person, confident, specific, no clichés) explaining why ${data.resume.name} is the right hire for the role below. Reference 1-2 concrete achievements from the resume that map to the job's needs. Do NOT include salutations, addresses, or sign-offs — only the body paragraph(s).
+
+JOB DESCRIPTION:
+"""
+${data.jobDescription}
+"""
+
+CANDIDATE:
+- Name: ${data.resume.name}
+- Headline: ${data.resume.headline}
+- Summary: ${data.resume.summary}
+- Key achievements:
+- ${topBullets}
+
+Return ONLY the cover letter text.`;
+
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      if (resp.status === 429) throw new Error("Rate limit reached. Please wait a moment and try again.");
+      if (resp.status === 402) throw new Error("AI credits exhausted. Add credits in Settings → Workspace → Usage.");
+      throw new Error(`AI gateway error: ${resp.status} ${text}`);
+    }
+
+    const json = await resp.json();
+    const text: string = json.choices?.[0]?.message?.content ?? "";
+    return { letter: text.trim() };
+  });

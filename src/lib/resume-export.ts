@@ -199,6 +199,70 @@ export async function exportPDF(data: ResumeData, name: string) {
   pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
 }
 
+export async function exportCoverLetterPDF(data: ResumeData, letter: string, name: string) {
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  pdf.setFont("helvetica", "normal");
+  let y = MARGIN;
+
+  const setColor = (c: RGB) => pdf.setTextColor(c[0], c[1], c[2]);
+  const ensure = (need: number) => {
+    if (y + need > A4_H - MARGIN) {
+      pdf.addPage();
+      y = MARGIN;
+    }
+  };
+  const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5) => {
+    pdf.setFont("helvetica", style);
+    pdf.setFontSize(size);
+    setColor(color);
+    const lines = pdf.splitTextToSize(str, CONTENT_W) as string[];
+    const lineH = (size * lh) / 2.83465;
+    for (const line of lines) {
+      ensure(lineH);
+      pdf.text(line, MARGIN, y);
+      y += lineH;
+    }
+  };
+
+  // Header
+  writeBlock(data.name, 22, "bold", ACCENT, 1.3);
+  writeBlock(data.headline, 11, "bold", MUTED, 1.3);
+  y += 1;
+  const contact = [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join("   •   ");
+  writeBlock(contact, 9.5, "normal", MUTED, 1.3);
+
+  // Rule
+  y += 1.5;
+  pdf.setDrawColor(RULE[0], RULE[1], RULE[2]);
+  pdf.setLineWidth(0.2);
+  pdf.line(MARGIN, y, A4_W - MARGIN, y);
+  y += 6;
+
+  // Date
+  const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  writeBlock(today, 10, "normal", MUTED, 1.4);
+  y += 4;
+
+  // Salutation
+  writeBlock("Dear Hiring Manager,", 11, "normal", BODY, 1.4);
+  y += 3;
+
+  // Body
+  const paragraphs = letter.split(/\n\s*\n/);
+  for (const p of paragraphs) {
+    writeBlock(p.trim(), 11, "normal", BODY, 1.55);
+    y += 3;
+  }
+
+  // Sign-off
+  y += 2;
+  writeBlock("Sincerely,", 11, "normal", BODY, 1.4);
+  y += 1;
+  writeBlock(data.name, 11, "bold", ACCENT, 1.4);
+
+  pdf.save(`${name.replace(/\s+/g, "_")}_Cover_Letter.pdf`);
+}
+
 // Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
 const FONT = "Helvetica";
 const ACCENT_HEX = "1F2937";

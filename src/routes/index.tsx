@@ -10,8 +10,8 @@ import { ProfileBar } from "@/components/ProfileBar";
 import { ResumeDocument } from "@/components/ResumeDocument";
 import { GenerationProgress } from "@/components/GenerationProgress";
 import { DEFAULT_PROFILE, type ResumeData } from "@/types/resume";
-import { generateResume } from "@/lib/resume.functions";
-import { exportPDF, exportDOCX } from "@/lib/resume-export";
+import { generateResume, generateCoverLetter } from "@/lib/resume.functions";
+import { exportPDF, exportDOCX, exportCoverLetterPDF } from "@/lib/resume-export";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -131,6 +131,26 @@ function Index() {
       success: "DOCX downloaded",
       error: "DOCX export failed",
     });
+  };
+
+  const handleCoverLetter = async () => {
+    if (!resume) return;
+    if (!jd.trim()) {
+      toast.error("Paste the job description first");
+      return;
+    }
+    await toast.promise(
+      (async () => {
+        const { letter } = await generateCoverLetter({ data: { jobDescription: jd, resume } });
+        if (!letter) throw new Error("Empty cover letter");
+        await exportCoverLetterPDF(resume, letter, resume.name);
+      })(),
+      {
+        loading: "Writing cover letter…",
+        success: "Cover letter downloaded",
+        error: (e) => e?.message ?? "Cover letter failed",
+      },
+    );
   };
 
   const copyText = () => {
@@ -266,6 +286,14 @@ function Index() {
                 className="bg-[image:var(--gradient-primary)] hover:opacity-90 shadow-[var(--shadow-elegant)]"
               >
                 <Download className="h-4 w-4 mr-1" /> PDF
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCoverLetter}
+                disabled={!resume || !jd.trim()}
+              >
+                <FileText className="h-4 w-4 mr-1" /> Cover Letter
               </Button>
             </div>
           </div>
