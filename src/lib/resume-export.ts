@@ -44,7 +44,7 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   const text = (
     str: string,
-    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "justify"; maxW?: number; lineHeight?: number } = {}
+    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "justify"; maxW?: number; lineHeight?: number; font?: string } = {}
   ) => {
     const size = opts.size ?? 10;
     const style = opts.style ?? "normal";
@@ -52,7 +52,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     const x = opts.x ?? MARGIN;
     const maxW = opts.maxW ?? CONTENT_W;
     const lh = opts.lineHeight ?? 1.35;
-    pdf.setFont("helvetica", style);
+    pdf.setFont(opts.font ?? "helvetica", style);
     pdf.setFontSize(size);
     setColor(color);
     const lines = pdf.splitTextToSize(str, maxW) as string[];
@@ -126,8 +126,8 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   // Header
-  text(data.name, { size: 33, style: "bold", color: ACCENT });
-  text(data.headline, { size: 16.5, style: "bold", color: MUTED });
+  text(data.name, { size: 33, style: "bold", color: [30, 58, 138], font: "times" });
+  text(data.headline, { size: 16.5, style: "bold", color: [30, 58, 138], font: "times" });
   y += 1;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
