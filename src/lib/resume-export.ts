@@ -126,8 +126,8 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   // Header
-  text(data.name, { size: 22, style: "bold", color: ACCENT });
-  text(data.headline, { size: 11, style: "bold", color: MUTED });
+  text(data.name, { size: 33, style: "bold", color: ACCENT });
+  text(data.headline, { size: 16.5, style: "bold", color: MUTED });
   y += 1;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
