@@ -76,7 +76,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   const heading = (label: string) => {
-    y += 2;
+    y += 5;
     ensure(10);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(15);

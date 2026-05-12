@@ -279,7 +279,7 @@ export function ResumeDocument({ data, onChange }: Props) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section data-pdf-section style={{ marginBottom: 12 }}>
+    <section data-pdf-section style={{ marginBottom: 12, marginTop: 10 }}>
       <h2
         style={{
           fontSize: 19.5,
