@@ -288,7 +288,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
           textTransform: "uppercase",
           color: ACCENT,
           margin: "0 0 6px 0",
-          paddingBottom: 3,
+          paddingBottom: 7,
           borderBottom: `1px solid ${RULE}`,
         }}
       >
