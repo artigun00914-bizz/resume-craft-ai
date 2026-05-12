@@ -282,7 +282,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <section data-pdf-section style={{ marginBottom: 12 }}>
       <h2
         style={{
-          fontSize: 13,
+          fontSize: 19.5,
           fontWeight: 700,
           letterSpacing: 1.5,
           textTransform: "uppercase",
