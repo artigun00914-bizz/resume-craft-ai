@@ -32,7 +32,7 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Generate exactly 4 work experiences. The most recent MUST be the user's "Recent Company" (Deep Sync, Jan 2023 - Present). Invent the other 3 prior companies with realistic names tailored to the JD industry; durations should be contiguous and span ~10-12 years total.
 - 5-6 bullets for current role, 4-5 for prior roles, 3 for the oldest.
 - Summary: 3-4 sentences, first-person, achievement-led.
-- Skills: 5-8 categories.
+- Skills: 7-9 categories tailored to the JD (e.g., Languages, Backend Frameworks, Cloud & Infra, Databases & Storage, DevOps & CI/CD, Observability, Security & Privacy, Testing & Quality, Architecture & Practices). Each "items" string MUST list 6-10 specific, comma-separated technologies/sub-skills (concrete tools, frameworks, protocols, or methodologies — not vague phrases). Mirror exact JD keywords where applicable.
 - Projects: 2-3 relevant projects.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
