@@ -77,9 +77,9 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   const heading = (label: string) => {
     y += 2;
-    ensure(8);
+    ensure(10);
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(10);
+    pdf.setFontSize(15);
     setColor(ACCENT);
     pdf.text(label.toUpperCase(), MARGIN, y, { charSpace: 0.6 });
     y += 1.5;
