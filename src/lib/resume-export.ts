@@ -126,9 +126,11 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   // Header
+  y += 6;
   text(data.name, { size: 33, style: "bold", color: [30, 58, 138], font: "times" });
+  y += 3;
   text(data.headline, { size: 16.5, style: "bold", color: [30, 58, 138], font: "times" });
-  y += 1;
+  y += 2;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
   rule();
