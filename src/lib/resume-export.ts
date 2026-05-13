@@ -76,17 +76,17 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   const heading = (label: string) => {
-    y += 5;
-    ensure(10);
+    y += 6;
+    ensure(12);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(15);
     setColor(ACCENT);
     pdf.text(label.toUpperCase(), MARGIN, y, { charSpace: 0.6 });
-    y += 3;
+    y += 5;
     pdf.setDrawColor(RULE[0], RULE[1], RULE[2]);
     pdf.setLineWidth(0.2);
     pdf.line(MARGIN, y, A4_W - MARGIN, y);
-    y += 3;
+    y += 5;
   };
 
   const row = (left: string, right: string, opts: { leftStyle?: "bold" | "italic" | "normal"; leftSize?: number; leftColor?: RGB; rightSize?: number; rightColor?: RGB } = {}) => {
