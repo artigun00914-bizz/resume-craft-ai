@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Monsters' resume builder" },
+      { name: "description", content: "I can help you to make any resume easliy." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Monsters' resume builder" },
+      { property: "og:description", content: "I can help you to make any resume easliy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Monsters' resume builder" },
+      { name: "twitter:description", content: "I can help you to make any resume easliy." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9e24b03e-4c16-47fe-aba2-601b23dcdcd7/id-preview-09a9e166--8b964686-7616-41dd-a930-c91a1410b36a.lovable.app-1778707347742.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9e24b03e-4c16-47fe-aba2-601b23dcdcd7/id-preview-09a9e166--8b964686-7616-41dd-a930-c91a1410b36a.lovable.app-1778707347742.png" },
     ],
     links: [
       {
