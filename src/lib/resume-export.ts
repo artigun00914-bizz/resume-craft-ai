@@ -130,13 +130,13 @@ export async function exportPDF(data: ResumeData, name: string) {
   pdf.setFont("times", "bold");
   pdf.setFontSize(33);
   setColor([30, 58, 138]);
-  y += (33 * 1.1) / 2.83465;
+  y += (33 * 1.0) / 2.83465;
   pdf.text(data.name, MARGIN, y, { align: "left" });
   pdf.setFont("times", "bold");
   pdf.setFontSize(16.5);
-  y += (16.5 * 1.1) / 2.83465;
+  y += (33 * 0.45) / 2.83465 + (16.5 * 1.0) / 2.83465;
   pdf.text(data.headline, MARGIN, y, { align: "left" });
-  y += 1;
+  y += (16.5 * 0.6) / 2.83465 + 2;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
   rule();
