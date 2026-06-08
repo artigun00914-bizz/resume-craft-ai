@@ -127,8 +127,15 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   // Header
   y += 2;
-  text(data.name, { size: 33, style: "bold", color: [30, 58, 138], font: "times", lineHeight: 1.1 });
-  text(data.headline, { size: 16.5, style: "bold", color: [30, 58, 138], font: "times", lineHeight: 1.1 });
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(33);
+  setColor([30, 58, 138]);
+  y += (33 * 1.1) / 2.83465;
+  pdf.text(data.name, MARGIN, y, { align: "left" });
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(16.5);
+  y += (16.5 * 1.1) / 2.83465;
+  pdf.text(data.headline, MARGIN, y, { align: "left" });
   y += 1;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
