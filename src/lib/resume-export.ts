@@ -82,7 +82,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     pdf.setFontSize(15);
     setColor(ACCENT);
     pdf.text(label.toUpperCase(), MARGIN, y, { charSpace: 0.6 });
-    y += 5;
+    y += 2.5;
     pdf.setDrawColor(RULE[0], RULE[1], RULE[2]);
     pdf.setLineWidth(0.2);
     pdf.line(MARGIN, y, A4_W - MARGIN, y);
