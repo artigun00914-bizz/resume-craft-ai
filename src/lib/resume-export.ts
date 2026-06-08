@@ -139,6 +139,12 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   heading("Experience");
   data.experience.forEach((e) => {
+    // Keep company header with title and first bullet on same page
+    const headerBlock = 18;
+    if (y + headerBlock > A4_H - MARGIN) {
+      pdf.addPage();
+      y = MARGIN;
+    }
     y += 1;
     row(e.company, e.location);
     row(e.title, `${e.start} – ${e.end}`, { leftStyle: "italic", leftSize: 10, leftColor: [55, 65, 81], rightSize: 9.5 });
