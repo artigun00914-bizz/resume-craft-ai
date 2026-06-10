@@ -58,7 +58,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 - Most recent company (must appear first): Deep Sync (Redmond, WA), Senior Software Engineer, Jan 2023 – Present
-- Generate 3 additional prior companies tailored to the JD's industry/tech.
+- Generate 3 additional prior companies. Calibrate total career length to the JD's required years of experience (see SYSTEM rules). Weave in 1-2 bullets per older role that are adjacent or tangential to the JD so the career arc feels authentic, not retrofitted.
 
 Tailor every bullet to the job description above. Return JSON via the tool.`;
 
