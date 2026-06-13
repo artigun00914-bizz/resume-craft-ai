@@ -47,7 +47,7 @@ export function ResumeDocument({ data, onChange }: Props) {
         fontSize: 12.5,
         lineHeight: 1.5,
         color: "#111827",
-        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontFamily: 'Georgia, "Times New Roman", Times, serif',
         background: "#ffffff",
       }}
     >
