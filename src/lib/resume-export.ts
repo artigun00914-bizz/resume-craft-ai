@@ -29,7 +29,7 @@ const BODY: RGB = [17, 24, 39];
 
 export async function exportPDF(data: ResumeData, name: string) {
   const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  pdf.setFont("helvetica", "normal");
+  pdf.setFont("times", "normal");
 
   let y = MARGIN;
 
@@ -52,7 +52,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     const x = opts.x ?? MARGIN;
     const maxW = opts.maxW ?? CONTENT_W;
     const lh = opts.lineHeight ?? 1.35;
-    pdf.setFont(opts.font ?? "helvetica", style);
+    pdf.setFont(opts.font ?? "times", style);
     pdf.setFontSize(size);
     setColor(color);
     const lines = pdf.splitTextToSize(str, maxW) as string[];
@@ -78,7 +78,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   const heading = (label: string) => {
     y += 6;
     ensure(12);
-    pdf.setFont("helvetica", "bold");
+    pdf.setFont("times", "bold");
     pdf.setFontSize(15);
     setColor(ACCENT);
     pdf.text(label.toUpperCase(), MARGIN, y, { charSpace: 0.6 });
@@ -97,11 +97,11 @@ export async function exportPDF(data: ResumeData, name: string) {
     const rightColor = opts.rightColor ?? MUTED;
     const lineH = (Math.max(leftSize, rightSize) * 1.35) / 2.83465;
     ensure(lineH);
-    pdf.setFont("helvetica", leftStyle);
+    pdf.setFont("times", leftStyle);
     pdf.setFontSize(leftSize);
     setColor(leftColor);
     pdf.text(left, MARGIN, y);
-    pdf.setFont("helvetica", "normal");
+    pdf.setFont("times", "normal");
     pdf.setFontSize(rightSize);
     setColor(rightColor);
     pdf.text(right, A4_W - MARGIN, y, { align: "right" });
@@ -112,7 +112,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     const size = 10;
     const lh = 1.4;
     const lineH = (size * lh) / 2.83465;
-    pdf.setFont("helvetica", "normal");
+    pdf.setFont("times", "normal");
     pdf.setFontSize(size);
     setColor(BODY);
     const indent = 4;
@@ -163,13 +163,13 @@ export async function exportPDF(data: ResumeData, name: string) {
   data.skills.forEach((s) => {
     const lineH = (10 * 1.4) / 2.83465;
     ensure(lineH);
-    pdf.setFont("helvetica", "bold");
+    pdf.setFont("times", "bold");
     pdf.setFontSize(10);
     setColor(ACCENT);
     const label = `${s.category}: `;
     pdf.text(label, MARGIN, y);
     const labelW = pdf.getTextWidth(label);
-    pdf.setFont("helvetica", "normal");
+    pdf.setFont("times", "normal");
     setColor(BODY);
     const lines = pdf.splitTextToSize(s.items, CONTENT_W - labelW) as string[];
     lines.forEach((line, i) => {
@@ -194,12 +194,12 @@ export async function exportPDF(data: ResumeData, name: string) {
   data.education.forEach((ed) => {
     const lineH = (10 * 1.4) / 2.83465;
     ensure(lineH);
-    pdf.setFont("helvetica", "bold");
+    pdf.setFont("times", "bold");
     pdf.setFontSize(10);
     setColor(ACCENT);
     pdf.text(ed.school, MARGIN, y);
     const w = pdf.getTextWidth(ed.school);
-    pdf.setFont("helvetica", "normal");
+    pdf.setFont("times", "normal");
     setColor(BODY);
     pdf.text(` — ${ed.degree}`, MARGIN + w, y);
     y += lineH;
@@ -215,7 +215,7 @@ export async function exportPDF(data: ResumeData, name: string) {
 
 export async function exportCoverLetterPDF(data: ResumeData, letter: string, name: string) {
   const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  pdf.setFont("helvetica", "normal");
+  pdf.setFont("times", "normal");
   let y = MARGIN;
 
   const setColor = (c: RGB) => pdf.setTextColor(c[0], c[1], c[2]);
@@ -226,7 +226,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     }
   };
   const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5) => {
-    pdf.setFont("helvetica", style);
+    pdf.setFont("times", style);
     pdf.setFontSize(size);
     setColor(color);
     const lines = pdf.splitTextToSize(str, CONTENT_W) as string[];
@@ -277,8 +277,8 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
   pdf.save(`${name.replace(/\s+/g, "_")}_Cover_Letter.pdf`);
 }
 
-// Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Helvetica/Arial typography
-const FONT = "Helvetica";
+// Match PDF: A4 (11906 x 16838 DXA), ~14mm margins, Georgia typography
+const FONT = "Georgia";
 const ACCENT_HEX = "1F2937";
 const MUTED_HEX = "4B5563";
 const RULE_HEX = "D1D5DB";
