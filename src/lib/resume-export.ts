@@ -185,11 +185,6 @@ export async function exportPDF(data: ResumeData, name: string) {
     data.projects.forEach((p) => bullet(`${p.name}: ${p.description}`));
   }
 
-  if (data.certifications.length) {
-    heading("Certifications");
-    data.certifications.forEach((c) => bullet(c));
-  }
-
   heading("Education");
   data.education.forEach((ed) => {
     const lineH = (10 * 1.4) / 2.83465;

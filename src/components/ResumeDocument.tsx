@@ -221,24 +221,6 @@ export function ResumeDocument({ data, onChange }: Props) {
         </Section>
       )}
 
-      {data.certifications.length > 0 && (
-        <Section title="Certifications">
-          <ul style={{ margin: 0, paddingLeft: 18 }}>
-            {data.certifications.map((c, i) => (
-              <li key={i} style={{ marginBottom: 3 }}>
-                <Editable
-                  value={c}
-                  onChange={(v) => {
-                    const next = [...data.certifications];
-                    next[i] = v;
-                    update("certifications", next);
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
 
       <Section title="Education">
         {data.education.map((ed, i) => (
