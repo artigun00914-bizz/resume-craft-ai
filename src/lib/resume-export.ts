@@ -391,11 +391,6 @@ export async function exportDOCX(data: ResumeData, name: string) {
     );
   }
 
-  if (data.certifications.length) {
-    children.push(sectionHeading("Certifications"));
-    data.certifications.forEach((c) => children.push(bullet(c)));
-  }
-
   children.push(sectionHeading("Education"));
   data.education.forEach((ed) =>
     children.push(
