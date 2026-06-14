@@ -43,6 +43,7 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Summary: 3-4 sentences, first-person, achievement-led. State the total years of experience consistent with the calibrated career span (no inflation).
 - Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies (concrete tools, frameworks, protocols, methodologies). Mirror exact JD keywords, but also include 2-4 adjacent technologies the candidate would plausibly know.
 - Projects: 2-3 projects. At least one should be tangential/personal (OSS, side project, hackathon) rather than a pure JD mirror.
+- Certifications: Do NOT include a Certifications section. Return an empty array.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
 
@@ -115,7 +116,7 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "experience", "skills", "projects", "certifications", "tools", "atsScore", "matchedKeywords"],
+          required: ["summary", "experience", "skills", "projects", "tools", "atsScore", "matchedKeywords"],
         },
       },
     };
