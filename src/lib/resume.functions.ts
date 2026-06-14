@@ -64,7 +64,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Phone: ${data.profile.phone}
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
-- Most recent company (must appear first): Deep Sync (Redmond, WA). Set the title to match the JD's target seniority (or one notch below) and set the start date so the total career span matches the JD's required years tightly (see SYSTEM rules). Default start is Jan 2023, but shorten it if the JD calls for fewer total years.
+- Most recent company (must appear first): Deep Sync (Kirkland, WA). Set the title to match the JD's target seniority (or one notch below) and set the start date so the total career span matches the JD's required years tightly (see SYSTEM rules). Default start is Jan 2023, but shorten it if the JD calls for fewer total years.
 - Generate the appropriate number of prior companies (1–3) based on the calibrated span. Titles must show a clear upward progression toward the current role (e.g., Junior → Mid → Senior). Weave in 1-2 adjacent/tangential bullets per older role so the arc feels authentic.
 
 Tailor every bullet to the job description above. Return JSON via the tool.`;
