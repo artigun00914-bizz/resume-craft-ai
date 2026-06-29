@@ -118,8 +118,8 @@ function Index() {
       });
       const full: ResumeData = {
         ...profile,
-        education: profile.education,
         ...result,
+        education: profile.education,
       };
       setHistory([]);
       setFuture([]);
