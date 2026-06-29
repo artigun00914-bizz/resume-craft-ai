@@ -30,20 +30,61 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Tone: confident, specific, conversational-but-professional. Avoid clichés like "results-driven", "synergy", "leveraged".
 - Every bullet starts with a strong action verb and includes a quantified outcome (%, $, time saved, scale).
 - Mirror exact keywords/technologies from the job description naturally (no stuffing).
-- WORK HISTORY IS FIXED (do NOT invent companies, dates, titles, or locations). Use EXACTLY these roles, in this order (most recent first), tailoring ONLY the bullets to the JD:
+- WORK HISTORY IS FIXED (do NOT invent companies, dates, titles, or locations). Use EXACTLY these roles, in this order (most recent first). Each role's "GROUND TRUTH" lists the candidate's real work — every bullet you write MUST be grounded in one of those facts (rephrased/tailored to JD keywords, quantified where reasonable), and EVERY ground-truth item must appear across the bullets in some form (either as a primary bullet or merged into one). Do NOT fabricate work that isn't represented in ground truth.
+
   1. QUODD — Senior Software Engineer — New Jersey, United States — Jan 2022 – Present
+     GROUND TRUTH:
+     - Ensure market data feed ingress from exchanges is processed properly
+     - Write 100% testable C++ code with minimal code churn
+     - Built a CI/CD pipeline that has shipped 100+ releases to QA and production
+     - Feed experience: CTA, UTP, GIDS, CTF, OPRA, RussellTick, CME
+     - Protocols: raw binary, SBE
+     - On-call rotation, including 3 AM production incident response
+
   2. Quick Base — Software Engineer — Greater Boston Area — Jan 2020 – Feb 2022
+     GROUND TRUTH:
+     - Boosted overall system performance ~20% via asynchronous programming on the networking code (C++)
+     - Drove testing effort that produced a 400% increase in C++ source files under test
+
   3. VersaTeach LLC — Software Programmer (Remote) — Albuquerque, New Mexico Area — Nov 2018 – May 2020
+     GROUND TRUTH:
+     - Wrote scripts to periodically migrate resumes from on-prem LAMP filesystem to AWS S3, running continuously on EC2 until decommission
+     - Part-time maintenance of the company website
+     - Built business-model solutions to advertise and grow services
+
   4. TradeStation — Software Engineer — Richardson, Texas — Nov 2018 – Jan 2020
+     GROUND TRUTH:
+     - Built a REST API on top of a large legacy C++ codebase, exposing software functionality as RESTful resources to enable automation
+     - Used the C++ REST API plus PowerShell to automate user failovers
+     - Leveraged AWS for software testing
+
   5. CACI International Inc — Software Engineer — Rome, New York — Feb 2018 – Oct 2018
+     GROUND TRUTH:
+     - Wrote multithreaded SOA software in Java, C++, and Python
+     - Linux development with virtual machines, Docker, and databases
+
   6. Los Alamos National Laboratory — R&D Robotics Intern — Los Alamos, New Mexico — May 2017 – Jul 2017
+     GROUND TRUTH:
+     - Implemented software for the TA-53 neutron beam using the EPICS interface
+     - Wrote/modified BASH scripts and config files on Linux
+
   7. The University of New Mexico — Software Developer — Albuquerque, New Mexico Area — Aug 2016 – Jun 2017
+     GROUND TRUTH:
+     - Built a Java software suite to classify patient stimulus reactions alongside real-time EEG brainwave data
+     - Bridged Java frontend with a faster C/C++ backend to drive the EEG hardware
+
   8. Halo River Management Group — Full Stack Developer — Rio Rancho, NM — May 2016 – Jul 2016
-- BULLET COUNTS: 5-6 bullets for QUODD (current), 4-5 for Quick Base & TradeStation, 3-4 for VersaTeach & CACI, 2-3 for the earliest three roles. Keep bullets seniority-appropriate (earlier roles smaller scope / learning-oriented).
-- NATURAL CAREER ARC: ~70-80% of bullets directly map to the JD's stack/responsibilities; ~20-30% should be authentic adjacent work (other languages, internal tools, mentorship, OSS, migrations).
+     GROUND TRUTH:
+     - Rewrote pages of the company web portal against their database
+     - Wrote PHP scripts to connect the frontend with MySQL
+     - Wrote and optimized MySQL queries
+
+- BULLET COUNTS: 5-6 bullets for QUODD, 3-4 for Quick Base, 3-4 for TradeStation, 3 for VersaTeach & CACI, 2-3 for the earliest three roles. Earlier roles stay smaller-scope / learning-oriented. You may merge two related ground-truth items into one bullet if needed to stay within counts, but do not drop any ground-truth fact entirely.
+- NATURAL CAREER ARC: tailor wording/keywords to the JD, but never invent stack or scope that isn't in ground truth. If the JD's stack differs from a role's ground truth, keep the bullet truthful and only bridge with phrasing (e.g. "applied similar async patterns later in...").
 - Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
-- TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels (single words / short phrases) tailored to the JD. The array MUST include "C#" and ".NET" as entries. Place the most JD-relevant skills first.
-- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies.
+- TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels. The array MUST include ALL of: "C++", "Python", "Java", "C#", ".NET". Add 1-3 more JD-relevant skills. Order with the most JD-relevant first while keeping all five mandatory entries present.
+- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies. Include at least one category that surfaces the candidate's real stack (C++, Python, Java, C#/.NET, PHP/MySQL, AWS/EC2/S3, Docker, Linux, PowerShell, EPICS, SBE/binary market-data protocols).
+
 - Projects: Do NOT include a Projects section. Return an empty array.
 - Certifications: Do NOT include a Certifications section. Return an empty array.
 - Tools & Technologies: Do NOT include a Tools & Technologies section. Return an empty array.
@@ -69,7 +110,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 
-Use the FIXED work history specified in the SYSTEM rules (8 roles, exact companies/titles/dates/locations). Tailor only the bullets, summary, skills, topSkills, and matchedKeywords to the job description. Do NOT generate projects or tools sections. The topSkills array MUST include "C#" and ".NET". Return JSON via the tool.`;
+Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. Every ground-truth fact for every role MUST be reflected in the bullets (rephrased to mirror JD keywords, quantified when natural). Do NOT invent stack or scope outside the ground truth. Do NOT generate projects or tools sections. The topSkills array MUST include all of: "C++", "Python", "Java", "C#", ".NET". Return JSON via the tool.`;
 
     const tool = {
       type: "function",
@@ -140,14 +181,19 @@ Use the FIXED work history specified in the SYSTEM rules (8 roles, exact compani
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("No tool call returned");
     const args = JSON.parse(call.function.arguments);
-    // Guarantee C# and .NET are present in topSkills
+    // Guarantee mandatory top skills are present and ordered first
     const ts: string[] = Array.isArray(args.topSkills) ? args.topSkills.filter((s: any) => typeof s === "string") : [];
     const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "");
-    const hasCS = ts.some((s) => norm(s) === "c#");
-    const hasNet = ts.some((s) => norm(s) === ".net" || norm(s) === "net");
-    if (!hasCS) ts.push("C#");
-    if (!hasNet) ts.push(".NET");
-    args.topSkills = ts;
+    const required: { label: string; match: (n: string) => boolean }[] = [
+      { label: "C++", match: (n) => n === "c++" },
+      { label: "Python", match: (n) => n === "python" },
+      { label: "Java", match: (n) => n === "java" },
+      { label: "C#", match: (n) => n === "c#" },
+      { label: ".NET", match: (n) => n === ".net" || n === "net" || n === "dotnet" },
+    ];
+    const kept = ts.filter((s) => !required.some((r) => r.match(norm(s))));
+    args.topSkills = [...required.map((r) => r.label), ...kept];
+
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });
 
