@@ -110,7 +110,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 
-Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. Every ground-truth fact for every role MUST be reflected in the bullets (rephrased to mirror JD keywords, quantified when natural). Do NOT invent stack or scope outside the ground truth. Do NOT generate projects or tools sections. The topSkills array MUST include all of: "C++", "Python", "Java", "C#", ".NET". Return JSON via the tool.`;
+Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. EVERY ground-truth fact for EVERY role MUST be reflected in the bullets — do not silently drop any item to chase JD match. Rephrase to mirror JD keywords and quantify when natural. Do NOT invent stack or scope outside the ground truth, except for the LANGUAGE COVERAGE rule which allows one bridging bullet at QUODD or TradeStation to surface C# / .NET. All five of C++, Python, Java, C#, and .NET MUST be named explicitly in the bullets of the experience section AND in the skills section. Do NOT generate projects, tools, or topSkills sections. Return JSON via the tool.`;
 
     const tool = {
       type: "function",
