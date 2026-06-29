@@ -21,6 +21,7 @@ export type ResumeData = {
   location: string;
   linkedin?: string;
   summary: string;
+  topSkills: string[];
   experience: Experience[];
   skills: SkillGroup[];
   education: Education[];
@@ -33,15 +34,15 @@ export type ResumeData = {
 
 export const DEFAULT_PROFILE = {
   name: "Arthur Faison",
-  headline: "Senior Software Engineer",
+  headline: "SENIOR SOFTWARE ENGINEER",
   email: "mathaey_senit4@outlook.com",
   phone: "+1 (986) 255-1098",
-  location: "San Antonio, TX, US",
-  linkedin: "linkedin.com/in/arthur-faison-82058425",
+  location: "Richardson, TX, US",
+  linkedin: "linkedin.com/in/arthurnap24",
   education: [
     {
-      school: "University of Texas at San Antonio",
-      degree: "Bachelor of Science in Computer Science",
+      school: "The University of New Mexico",
+      degree: "B.S. in Computer Science, Engineering (2013 – 2017)",
     },
   ],
 };
