@@ -141,15 +141,15 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   // Header
   pdf.setFont("times", "bold");
-  pdf.setFontSize(33);
+  pdf.setFontSize(26);
   setColor([30, 58, 138]);
-  y += (33 * 0.85) / 2.83465;
+  y += (26 * 0.85) / 2.83465;
   pdf.text(data.name, A4_W / 2, y, { align: "center" });
   pdf.setFont("times", "bold");
-  pdf.setFontSize(16.5);
-  y += (16.5 * 0.95) / 2.83465;
+  pdf.setFontSize(13);
+  y += (13 * 0.95) / 2.83465;
   pdf.text(data.headline, A4_W / 2, y, { align: "center" });
-  y += (16.5 * 0.4) / 2.83465 + 2.5;
+  y += (13 * 0.4) / 2.83465 + 2.5;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
   rule(1);
@@ -352,12 +352,12 @@ export async function exportDOCX(data: ResumeData, name: string) {
   const children: Paragraph[] = [
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: data.name, bold: true, size: 44, font: FONT, color: ACCENT_HEX })],
+      children: [new TextRun({ text: data.name, bold: true, size: 36, font: FONT, color: ACCENT_HEX })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 40 },
-      children: [new TextRun({ text: data.headline, size: 24, font: FONT, color: MUTED_HEX, bold: true })],
+      children: [new TextRun({ text: data.headline, size: 20, font: FONT, color: MUTED_HEX, bold: true })],
     }),
     new Paragraph({
       border: RULE_BORDER,
