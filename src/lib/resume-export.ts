@@ -141,15 +141,15 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   // Header
   pdf.setFont("times", "bold");
-  pdf.setFontSize(26);
+  pdf.setFontSize(22);
   setColor([30, 58, 138]);
-  y += (26 * 0.85) / 2.83465;
+  y += (22 * 0.85) / 2.83465;
   pdf.text(data.name, A4_W / 2, y, { align: "center" });
   pdf.setFont("times", "bold");
-  pdf.setFontSize(13);
-  y += (13 * 0.95) / 2.83465;
+  pdf.setFontSize(12);
+  y += (12 * 0.95) / 2.83465;
   pdf.text(data.headline, A4_W / 2, y, { align: "center" });
-  y += (13 * 0.4) / 2.83465 + 2.5;
+  y += (12 * 0.5) / 2.83465 + 2.5;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
   rule(1);
