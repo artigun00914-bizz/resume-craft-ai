@@ -237,10 +237,20 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     setColor(color);
     const lines = pdf.splitTextToSize(str, CONTENT_W) as string[];
     const lineH = (size * lh) / 2.83465;
-    for (const line of lines) {
-      ensure(lineH);
-      pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
-      y += lineH;
+    if (align === "justify") {
+      const totalH = lines.length * lineH;
+      ensure(totalH);
+      const prevFactor = pdf.getLineHeightFactor();
+      pdf.setLineHeightFactor(lh);
+      pdf.text(lines, MARGIN, y, { align: "justify", maxWidth: CONTENT_W });
+      pdf.setLineHeightFactor(prevFactor);
+      y += totalH;
+    } else {
+      for (const line of lines) {
+        ensure(lineH);
+        pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
+        y += lineH;
+      }
     }
   };
 
