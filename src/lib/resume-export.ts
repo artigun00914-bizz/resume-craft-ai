@@ -147,7 +147,7 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   if (data.topSkills && data.topSkills.length) {
     heading("Top Skills");
-    text(data.topSkills.join("  •  "), { size: 10, style: "bold", color: ACCENT });
+    text(data.topSkills.join("  •  "), { size: 10, style: "bold", color: ACCENT, align: "justify" });
   }
 
 
