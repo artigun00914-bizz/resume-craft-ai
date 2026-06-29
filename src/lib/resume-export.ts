@@ -116,11 +116,12 @@ export async function exportPDF(data: ResumeData, name: string) {
     pdf.setFontSize(size);
     setColor(BODY);
     const indent = 4;
-    const lines = pdf.splitTextToSize(str, CONTENT_W - indent) as string[];
+    const maxW = CONTENT_W - indent;
+    const lines = pdf.splitTextToSize(str, maxW) as string[];
     lines.forEach((line, i) => {
       ensure(lineH);
       if (i === 0) pdf.text("•", MARGIN + 1, y);
-      pdf.text(line, MARGIN + indent, y);
+      pdf.text(line, MARGIN + indent, y, { align: "justify", maxWidth: maxW });
       y += lineH;
     });
   };
