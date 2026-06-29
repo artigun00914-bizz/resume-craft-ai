@@ -110,7 +110,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 
-Use the FIXED work history specified in the SYSTEM rules (8 roles, exact companies/titles/dates/locations). Tailor only the bullets, summary, skills, topSkills, and matchedKeywords to the job description. Do NOT generate projects or tools sections. The topSkills array MUST include "C#" and ".NET". Return JSON via the tool.`;
+Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. Every ground-truth fact for every role MUST be reflected in the bullets (rephrased to mirror JD keywords, quantified when natural). Do NOT invent stack or scope outside the ground truth. Do NOT generate projects or tools sections. The topSkills array MUST include all of: "C++", "Python", "Java", "C#", ".NET". Return JSON via the tool.`;
 
     const tool = {
       type: "function",
