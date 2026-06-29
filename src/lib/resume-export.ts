@@ -127,20 +127,19 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   // Header
-  y += 2;
   pdf.setFont("times", "bold");
   pdf.setFontSize(33);
   setColor([30, 58, 138]);
-  y += (33 * 1.0) / 2.83465;
-  pdf.text(data.name, MARGIN, y, { align: "left" });
+  y += (33 * 0.9) / 2.83465;
+  pdf.text(data.name, A4_W / 2, y, { align: "center" });
   pdf.setFont("times", "bold");
   pdf.setFontSize(16.5);
-  y += (33 * 0.45) / 2.83465 + (16.5 * 1.0) / 2.83465;
-  pdf.text(data.headline, MARGIN, y, { align: "left" });
-  y += (16.5 * 0.6) / 2.83465 + 2;
+  y += (33 * 0.3) / 2.83465 + (16.5 * 0.9) / 2.83465;
+  pdf.text(data.headline, A4_W / 2, y, { align: "center" });
+  y += (16.5 * 0.5) / 2.83465 + 1;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
-  text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
-  rule();
+  text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
+  rule(1);
 
   heading("Summary");
   text(data.summary, { size: 10, align: "justify" });
