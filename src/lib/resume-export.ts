@@ -58,13 +58,23 @@ export async function exportPDF(data: ResumeData, name: string) {
     setColor(color);
     const lines = pdf.splitTextToSize(str, maxW) as string[];
     const lineH = (size * lh) / 2.83465; // pt -> mm
-    for (const line of lines) {
-      ensure(lineH);
-      pdf.text(line, x, y, {
-        align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : opts.align === "justify" ? "justify" : "left",
-        maxWidth: maxW,
-      });
-      y += lineH;
+    if (opts.align === "justify") {
+      const totalH = lines.length * lineH;
+      ensure(totalH);
+      const prevFactor = pdf.getLineHeightFactor();
+      pdf.setLineHeightFactor(lh);
+      pdf.text(lines, x, y, { align: "justify", maxWidth: maxW });
+      pdf.setLineHeightFactor(prevFactor);
+      y += totalH;
+    } else {
+      for (const line of lines) {
+        ensure(lineH);
+        pdf.text(line, x, y, {
+          align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : "left",
+          maxWidth: maxW,
+        });
+        y += lineH;
+      }
     }
   };
 
