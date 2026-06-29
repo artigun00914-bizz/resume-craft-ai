@@ -44,8 +44,9 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
 - TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels (single words / short phrases) tailored to the JD. The array MUST include "C#" and ".NET" as entries. Place the most JD-relevant skills first.
 - Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies.
-- Projects: 2-3 projects. At least one should be tangential/personal (OSS, side project) rather than a pure JD mirror.
+- Projects: Do NOT include a Projects section. Return an empty array.
 - Certifications: Do NOT include a Certifications section. Return an empty array.
+- Tools & Technologies: Do NOT include a Tools & Technologies section. Return an empty array.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
 
@@ -68,7 +69,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 
-Use the FIXED work history specified in the SYSTEM rules (8 roles, exact companies/titles/dates/locations). Tailor only the bullets, summary, skills, topSkills, projects, tools, and matchedKeywords to the job description. The topSkills array MUST include "C#" and ".NET". Return JSON via the tool.`;
+Use the FIXED work history specified in the SYSTEM rules (8 roles, exact companies/titles/dates/locations). Tailor only the bullets, summary, skills, topSkills, and matchedKeywords to the job description. Do NOT generate projects or tools sections. The topSkills array MUST include "C#" and ".NET". Return JSON via the tool.`;
 
     const tool = {
       type: "function",
@@ -103,20 +104,13 @@ Use the FIXED work history specified in the SYSTEM rules (8 roles, exact compani
                 required: ["category", "items"],
               },
             },
-            projects: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: { name: { type: "string" }, description: { type: "string" } },
-                required: ["name", "description"],
-              },
-            },
             certifications: { type: "array", items: { type: "string" } },
+            projects: { type: "array", items: { type: "string" } },
             tools: { type: "array", items: { type: "string" } },
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "topSkills", "experience", "skills", "projects", "tools", "atsScore", "matchedKeywords"],
+          required: ["summary", "topSkills", "experience", "skills", "atsScore", "matchedKeywords"],
         },
       },
     };

@@ -201,34 +201,6 @@ export function ResumeDocument({ data, onChange }: Props) {
         </ul>
       </Section>
 
-      {data.projects.length > 0 && (
-        <Section title="Projects">
-          <ul style={{ margin: 0, paddingLeft: 18 }}>
-            {data.projects.map((p, i) => (
-              <li key={i} style={{ marginBottom: 4 }}>
-                <Editable
-                  value={p.name}
-                  onChange={(v) => {
-                    const next = [...data.projects];
-                    next[i] = { ...p, name: v };
-                    update("projects", next);
-                  }}
-                  style={{ fontWeight: 700, color: ACCENT }}
-                />
-                <span>: </span>
-                <Editable
-                  value={p.description}
-                  onChange={(v) => {
-                    const next = [...data.projects];
-                    next[i] = { ...p, description: v };
-                    update("projects", next);
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
 
 
       <Section title="Education">
@@ -256,14 +228,6 @@ export function ResumeDocument({ data, onChange }: Props) {
         ))}
       </Section>
 
-      {data.tools.length > 0 && (
-        <Section title="Tools & Technologies">
-          <Editable
-            value={data.tools.join(" • ")}
-            onChange={(v) => update("tools", v.split(/\s*•\s*/).filter(Boolean))}
-          />
-        </Section>
-      )}
     </div>
   );
 }
