@@ -79,11 +79,11 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
      - Wrote PHP scripts to connect the frontend with MySQL
      - Wrote and optimized MySQL queries
 
-- BULLET COUNTS: 5-6 bullets for QUODD, 3-4 for Quick Base, 3-4 for TradeStation, 3 for VersaTeach & CACI, 2-3 for the earliest three roles. Earlier roles stay smaller-scope / learning-oriented. You may merge two related ground-truth items into one bullet if needed to stay within counts, but do not drop any ground-truth fact entirely.
+- BULLET COUNTS: 5-7 bullets for QUODD, 4-5 for Quick Base, 4-5 for TradeStation, 3-4 for VersaTeach & CACI, 2-3 for the earliest three roles. EVERY ground-truth fact for EVERY role MUST appear in the bullets — do NOT drop any ground-truth item. You may merge two closely-related ground-truth items into one bullet, but no fact may be omitted. Earlier roles stay smaller-scope / learning-oriented.
 - NATURAL CAREER ARC: tailor wording/keywords to the JD, but never invent stack or scope that isn't in ground truth. If the JD's stack differs from a role's ground truth, keep the bullet truthful and only bridge with phrasing (e.g. "applied similar async patterns later in...").
+- LANGUAGE COVERAGE (MANDATORY): across the full experience section combined, ALL FIVE of C++, Python, Java, C#, and .NET must each be named in at least one bullet. C++ is already grounded at QUODD/Quick Base/TradeStation/CACI; Python at QUODD/CACI; Java at CACI/UNM. For C# and .NET (which aren't in ground truth), surface them truthfully by adding one bullet at QUODD or TradeStation describing related interop / tooling / supporting work the candidate did alongside the C++ stack (e.g. ".NET-based internal tooling", "C# automation scripts alongside PowerShell"). Keep it plausible and tied to the existing role context. Do NOT fabricate entire projects.
 - Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
-- TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels. The array MUST include ALL of: "C++", "Python", "Java", "C#", ".NET". Add 1-3 more JD-relevant skills. Order with the most JD-relevant first while keeping all five mandatory entries present.
-- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies. Include at least one category that surfaces the candidate's real stack (C++, Python, Java, C#/.NET, PHP/MySQL, AWS/EC2/S3, Docker, Linux, PowerShell, EPICS, SBE/binary market-data protocols).
+
 
 - Projects: Do NOT include a Projects section. Return an empty array.
 - Certifications: Do NOT include a Certifications section. Return an empty array.
