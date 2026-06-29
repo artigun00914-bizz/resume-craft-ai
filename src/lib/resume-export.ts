@@ -137,7 +137,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   pdf.setFontSize(16.5);
   y += (16.5 * 0.95) / 2.83465;
   pdf.text(data.headline, A4_W / 2, y, { align: "center" });
-  y += (16.5 * 0.4) / 2.83465 + 0.5;
+  y += (16.5 * 0.4) / 2.83465 + 2.5;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
   rule(1);
