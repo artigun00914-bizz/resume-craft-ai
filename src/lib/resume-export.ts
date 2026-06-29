@@ -186,10 +186,6 @@ export async function exportPDF(data: ResumeData, name: string) {
     y += lineH;
   });
 
-  if (data.projects.length) {
-    heading("Projects");
-    data.projects.forEach((p) => bullet(`${p.name}: ${p.description}`));
-  }
 
   heading("Education");
   data.education.forEach((ed) => {
@@ -206,10 +202,6 @@ export async function exportPDF(data: ResumeData, name: string) {
     y += lineH;
   });
 
-  if (data.tools.length) {
-    heading("Tools & Technologies");
-    text(data.tools.join("  •  "), { size: 10 });
-  }
 
   pdf.save(`${name.replace(/\s+/g, "_")}_Resume.pdf`);
 }
@@ -395,18 +387,6 @@ export async function exportDOCX(data: ResumeData, name: string) {
     ),
   );
 
-  if (data.projects.length) {
-    children.push(sectionHeading("Projects"));
-    data.projects.forEach((p) =>
-      children.push(
-        new Paragraph({
-          numbering: { reference: "bullets", level: 0 },
-          spacing: { after: 60 },
-          children: [body(`${p.name}: `, { bold: true, color: ACCENT_HEX }), body(p.description)],
-        }),
-      ),
-    );
-  }
 
   children.push(sectionHeading("Education"));
   data.education.forEach((ed) =>
@@ -418,10 +398,6 @@ export async function exportDOCX(data: ResumeData, name: string) {
     ),
   );
 
-  if (data.tools.length) {
-    children.push(sectionHeading("Tools & Technologies"));
-    children.push(new Paragraph({ children: [body(data.tools.join("  •  "))] }));
-  }
 
   const doc = new Document({
     styles: {
