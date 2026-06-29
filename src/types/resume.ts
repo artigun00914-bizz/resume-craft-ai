@@ -42,7 +42,7 @@ export const DEFAULT_PROFILE = {
   education: [
     {
       school: "The University of New Mexico",
-      degree: "B.S. in Computer Science, Engineering (2013 – 2017)",
+      degree: "Computer Science, Engineering · (2013 - 2017)",
     },
   ],
 };
