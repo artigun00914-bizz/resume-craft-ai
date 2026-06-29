@@ -60,7 +60,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     for (const line of lines) {
       ensure(lineH);
       pdf.text(line, x, y, {
-        align: opts.align === "right" ? "right" : opts.align === "justify" ? "justify" : "left",
+        align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : opts.align === "justify" ? "justify" : "left",
         maxWidth: maxW,
       });
       y += lineH;
