@@ -58,13 +58,23 @@ export async function exportPDF(data: ResumeData, name: string) {
     setColor(color);
     const lines = pdf.splitTextToSize(str, maxW) as string[];
     const lineH = (size * lh) / 2.83465; // pt -> mm
-    for (const line of lines) {
-      ensure(lineH);
-      pdf.text(line, x, y, {
-        align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : opts.align === "justify" ? "justify" : "left",
-        maxWidth: maxW,
-      });
-      y += lineH;
+    if (opts.align === "justify") {
+      const totalH = lines.length * lineH;
+      ensure(totalH);
+      const prevFactor = pdf.getLineHeightFactor();
+      pdf.setLineHeightFactor(lh);
+      pdf.text(lines, x, y, { align: "justify", maxWidth: maxW });
+      pdf.setLineHeightFactor(prevFactor);
+      y += totalH;
+    } else {
+      for (const line of lines) {
+        ensure(lineH);
+        pdf.text(line, x, y, {
+          align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : "left",
+          maxWidth: maxW,
+        });
+        y += lineH;
+      }
     }
   };
 
@@ -119,12 +129,14 @@ export async function exportPDF(data: ResumeData, name: string) {
     const indent = 4;
     const maxW = CONTENT_W - indent;
     const lines = pdf.splitTextToSize(str, maxW) as string[];
-    lines.forEach((line, i) => {
-      ensure(lineH);
-      if (i === 0) pdf.text("•", MARGIN + 1, y);
-      pdf.text(line, MARGIN + indent, y, { align: "justify", maxWidth: maxW });
-      y += lineH;
-    });
+    const totalH = lines.length * lineH;
+    ensure(totalH);
+    const prevFactor = pdf.getLineHeightFactor();
+    pdf.setLineHeightFactor(lh);
+    pdf.text("•", MARGIN + 1, y);
+    pdf.text(lines, MARGIN + indent, y, { align: "justify", maxWidth: maxW });
+    pdf.setLineHeightFactor(prevFactor);
+    y += totalH;
   };
 
   // Header
@@ -225,10 +237,20 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     setColor(color);
     const lines = pdf.splitTextToSize(str, CONTENT_W) as string[];
     const lineH = (size * lh) / 2.83465;
-    for (const line of lines) {
-      ensure(lineH);
-      pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
-      y += lineH;
+    if (align === "justify") {
+      const totalH = lines.length * lineH;
+      ensure(totalH);
+      const prevFactor = pdf.getLineHeightFactor();
+      pdf.setLineHeightFactor(lh);
+      pdf.text(lines, MARGIN, y, { align: "justify", maxWidth: CONTENT_W });
+      pdf.setLineHeightFactor(prevFactor);
+      y += totalH;
+    } else {
+      for (const line of lines) {
+        ensure(lineH);
+        pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
+        y += lineH;
+      }
     }
   };
 
