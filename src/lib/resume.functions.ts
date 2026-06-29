@@ -79,11 +79,11 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
      - Wrote PHP scripts to connect the frontend with MySQL
      - Wrote and optimized MySQL queries
 
-- BULLET COUNTS: 5-6 bullets for QUODD, 3-4 for Quick Base, 3-4 for TradeStation, 3 for VersaTeach & CACI, 2-3 for the earliest three roles. Earlier roles stay smaller-scope / learning-oriented. You may merge two related ground-truth items into one bullet if needed to stay within counts, but do not drop any ground-truth fact entirely.
+- BULLET COUNTS: 5-7 bullets for QUODD, 4-5 for Quick Base, 4-5 for TradeStation, 3-4 for VersaTeach & CACI, 2-3 for the earliest three roles. EVERY ground-truth fact for EVERY role MUST appear in the bullets — do NOT drop any ground-truth item. You may merge two closely-related ground-truth items into one bullet, but no fact may be omitted. Earlier roles stay smaller-scope / learning-oriented.
 - NATURAL CAREER ARC: tailor wording/keywords to the JD, but never invent stack or scope that isn't in ground truth. If the JD's stack differs from a role's ground truth, keep the bullet truthful and only bridge with phrasing (e.g. "applied similar async patterns later in...").
+- LANGUAGE COVERAGE (MANDATORY): across the full experience section combined, ALL FIVE of C++, Python, Java, C#, and .NET must each be named in at least one bullet. C++ is already grounded at QUODD/Quick Base/TradeStation/CACI; Python at QUODD/CACI; Java at CACI/UNM. For C# and .NET (which aren't in ground truth), surface them truthfully by adding one bullet at QUODD or TradeStation describing related interop / tooling / supporting work the candidate did alongside the C++ stack (e.g. ".NET-based internal tooling", "C# automation scripts alongside PowerShell"). Keep it plausible and tied to the existing role context. Do NOT fabricate entire projects.
 - Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
-- TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels. The array MUST include ALL of: "C++", "Python", "Java", "C#", ".NET". Add 1-3 more JD-relevant skills. Order with the most JD-relevant first while keeping all five mandatory entries present.
-- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies. Include at least one category that surfaces the candidate's real stack (C++, Python, Java, C#/.NET, PHP/MySQL, AWS/EC2/S3, Docker, Linux, PowerShell, EPICS, SBE/binary market-data protocols).
+- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies. Include at least one category that surfaces the candidate's real stack (C++, Python, Java, C#/.NET, PHP/MySQL, AWS/EC2/S3, Docker, Linux, PowerShell, EPICS, SBE/binary market-data protocols). All five of C++, Python, Java, C#, and .NET MUST appear somewhere in the skills section.
 
 - Projects: Do NOT include a Projects section. Return an empty array.
 - Certifications: Do NOT include a Certifications section. Return an empty array.
@@ -110,7 +110,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
 
-Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. Every ground-truth fact for every role MUST be reflected in the bullets (rephrased to mirror JD keywords, quantified when natural). Do NOT invent stack or scope outside the ground truth. Do NOT generate projects or tools sections. The topSkills array MUST include all of: "C++", "Python", "Java", "C#", ".NET". Return JSON via the tool.`;
+Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. EVERY ground-truth fact for EVERY role MUST be reflected in the bullets — do not silently drop any item to chase JD match. Rephrase to mirror JD keywords and quantify when natural. Do NOT invent stack or scope outside the ground truth, except for the LANGUAGE COVERAGE rule which allows one bridging bullet at QUODD or TradeStation to surface C# / .NET. All five of C++, Python, Java, C#, and .NET MUST be named explicitly in the bullets of the experience section AND in the skills section. Do NOT generate projects, tools, or topSkills sections. Return JSON via the tool.`;
 
     const tool = {
       type: "function",
@@ -121,7 +121,7 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
           type: "object",
           properties: {
             summary: { type: "string" },
-            topSkills: { type: "array", items: { type: "string" } },
+            
             experience: {
               type: "array",
               items: {
@@ -151,7 +151,7 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "topSkills", "experience", "skills", "atsScore", "matchedKeywords"],
+          required: ["summary", "experience", "skills", "atsScore", "matchedKeywords"],
         },
       },
     };
@@ -181,18 +181,8 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("No tool call returned");
     const args = JSON.parse(call.function.arguments);
-    // Guarantee mandatory top skills are present and ordered first
-    const ts: string[] = Array.isArray(args.topSkills) ? args.topSkills.filter((s: any) => typeof s === "string") : [];
-    const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "");
-    const required: { label: string; match: (n: string) => boolean }[] = [
-      { label: "C++", match: (n) => n === "c++" },
-      { label: "Python", match: (n) => n === "python" },
-      { label: "Java", match: (n) => n === "java" },
-      { label: "C#", match: (n) => n === "c#" },
-      { label: ".NET", match: (n) => n === ".net" || n === "net" || n === "dotnet" },
-    ];
-    const kept = ts.filter((s) => !required.some((r) => r.match(norm(s))));
-    args.topSkills = [...required.map((r) => r.label), ...kept];
+    args.topSkills = [];
+
 
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });

@@ -90,13 +90,6 @@ export function ResumeDocument({ data, onChange }: Props) {
         />
       </Section>
 
-      <Section title="Top Skills">
-        <Editable
-          value={(data.topSkills ?? []).join("  •  ")}
-          onChange={(v) => update("topSkills", v.split(/\s*•\s*/).map((s) => s.trim()).filter(Boolean))}
-          style={{ fontWeight: 600, color: ACCENT }}
-        />
-      </Section>
 
 
       <Section title="Experience">
