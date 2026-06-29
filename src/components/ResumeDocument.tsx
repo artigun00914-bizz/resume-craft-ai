@@ -249,7 +249,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       >
         {title}
       </h2>
-      <div>{children}</div>
+      <div style={{ textAlign: "justify" }}>{children}</div>
     </section>
   );
 }
