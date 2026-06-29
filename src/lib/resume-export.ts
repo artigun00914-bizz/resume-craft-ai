@@ -374,14 +374,6 @@ export async function exportDOCX(data: ResumeData, name: string) {
     }),
   ];
 
-  if (data.topSkills && data.topSkills.length) {
-    children.push(sectionHeading("Top Skills"));
-    children.push(
-      new Paragraph({
-        children: [body(data.topSkills.join("  •  "), { bold: true, color: ACCENT_HEX })],
-      }),
-    );
-  }
 
   children.push(sectionHeading("Experience"));
 
