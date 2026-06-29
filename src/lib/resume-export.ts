@@ -19,6 +19,7 @@ import type { ResumeData } from "@/types/resume";
 const A4_W = 210;
 const A4_H = 297;
 const MARGIN = 14;
+const BOTTOM_MARGIN = 8;
 const CONTENT_W = A4_W - MARGIN * 2;
 
 type RGB = [number, number, number];
@@ -34,7 +35,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   let y = MARGIN;
 
   const ensure = (need: number) => {
-    if (y + need > A4_H - MARGIN) {
+    if (y + need > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
@@ -130,13 +131,13 @@ export async function exportPDF(data: ResumeData, name: string) {
   pdf.setFont("times", "bold");
   pdf.setFontSize(33);
   setColor([30, 58, 138]);
-  y += (33 * 0.9) / 2.83465;
+  y += (33 * 0.85) / 2.83465;
   pdf.text(data.name, A4_W / 2, y, { align: "center" });
   pdf.setFont("times", "bold");
   pdf.setFontSize(16.5);
-  y += (33 * 0.3) / 2.83465 + (16.5 * 0.9) / 2.83465;
+  y += (16.5 * 0.95) / 2.83465;
   pdf.text(data.headline, A4_W / 2, y, { align: "center" });
-  y += (16.5 * 0.5) / 2.83465 + 1;
+  y += (16.5 * 0.4) / 2.83465 + 0.5;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
   text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
   rule(1);
@@ -154,7 +155,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   data.experience.forEach((e) => {
     // Keep company header with title and first bullet on same page
     const headerBlock = 18;
-    if (y + headerBlock > A4_H - MARGIN) {
+    if (y + headerBlock > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
@@ -213,7 +214,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
 
   const setColor = (c: RGB) => pdf.setTextColor(c[0], c[1], c[2]);
   const ensure = (need: number) => {
-    if (y + need > A4_H - MARGIN) {
+    if (y + need > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
