@@ -44,7 +44,7 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   const text = (
     str: string,
-    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "justify"; maxW?: number; lineHeight?: number; font?: string } = {}
+    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "center" | "justify"; maxW?: number; lineHeight?: number; font?: string } = {}
   ) => {
     const size = opts.size ?? 10;
     const style = opts.style ?? "normal";
@@ -60,7 +60,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     for (const line of lines) {
       ensure(lineH);
       pdf.text(line, x, y, {
-        align: opts.align === "right" ? "right" : opts.align === "justify" ? "justify" : "left",
+        align: opts.align === "right" ? "right" : opts.align === "center" ? "center" : opts.align === "justify" ? "justify" : "left",
         maxWidth: maxW,
       });
       y += lineH;
@@ -127,20 +127,19 @@ export async function exportPDF(data: ResumeData, name: string) {
   };
 
   // Header
-  y += 2;
   pdf.setFont("times", "bold");
   pdf.setFontSize(33);
   setColor([30, 58, 138]);
-  y += (33 * 1.0) / 2.83465;
-  pdf.text(data.name, MARGIN, y, { align: "left" });
+  y += (33 * 0.9) / 2.83465;
+  pdf.text(data.name, A4_W / 2, y, { align: "center" });
   pdf.setFont("times", "bold");
   pdf.setFontSize(16.5);
-  y += (33 * 0.45) / 2.83465 + (16.5 * 1.0) / 2.83465;
-  pdf.text(data.headline, MARGIN, y, { align: "left" });
-  y += (16.5 * 0.6) / 2.83465 + 2;
+  y += (33 * 0.3) / 2.83465 + (16.5 * 0.9) / 2.83465;
+  pdf.text(data.headline, A4_W / 2, y, { align: "center" });
+  y += (16.5 * 0.5) / 2.83465 + 1;
   const contactParts = [data.email, data.phone, data.location, data.linkedin].filter(Boolean);
-  text(contactParts.join("   •   "), { size: 9.5, color: MUTED });
-  rule();
+  text(contactParts.join("   •   "), { size: 9.5, color: MUTED, align: "center", x: A4_W / 2 });
+  rule(1);
 
   heading("Summary");
   text(data.summary, { size: 10, align: "justify" });
@@ -313,10 +312,12 @@ export async function exportDOCX(data: ResumeData, name: string) {
 
   const children: Paragraph[] = [
     new Paragraph({
+      alignment: AlignmentType.CENTER,
       children: [new TextRun({ text: data.name, bold: true, size: 44, font: FONT, color: ACCENT_HEX })],
     }),
     new Paragraph({
-      spacing: { after: 80 },
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 40 },
       children: [new TextRun({ text: data.headline, size: 24, font: FONT, color: MUTED_HEX, bold: true })],
     }),
     new Paragraph({

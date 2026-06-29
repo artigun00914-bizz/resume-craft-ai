@@ -52,20 +52,20 @@ export function ResumeDocument({ data, onChange }: Props) {
       }}
     >
       {/* Header */}
-      <header data-pdf-section style={{ marginBottom: 14, textAlign: "left" }}>
+      <header data-pdf-section style={{ marginBottom: 8, textAlign: "center" }}>
         <Editable
           as="h1"
           value={data.name}
           onChange={(v) => update("name", v)}
-          style={{ fontSize: 45, fontWeight: 700, letterSpacing: -0.5, margin: 0, color: "#1e3a8a", fontFamily: '"Times New Roman", Times, serif', textAlign: "left", display: "block" }}
+          style={{ fontSize: 45, fontWeight: 700, letterSpacing: -0.5, margin: 0, color: "#1e3a8a", fontFamily: '"Times New Roman", Times, serif', textAlign: "center", display: "block" }}
         />
         <Editable
           as="div"
           value={data.headline}
           onChange={(v) => update("headline", v)}
-          style={{ fontSize: 21, color: "#1e3a8a", marginTop: 2, fontWeight: 500, fontFamily: '"Times New Roman", Times, serif', textAlign: "left", display: "block" }}
+          style={{ fontSize: 21, color: "#1e3a8a", marginTop: 0, fontWeight: 500, fontFamily: '"Times New Roman", Times, serif', textAlign: "center", display: "block" }}
         />
-        <div style={{ marginTop: 8, fontSize: 11.5, color: MUTED, textAlign: "left" }}>
+        <div style={{ marginTop: 4, fontSize: 11.5, color: MUTED, textAlign: "center" }}>
           <Editable value={data.email} onChange={(v) => update("email", v)} />
           <span style={{ margin: "0 10px", color: RULE }}>•</span>
           <Editable value={data.phone} onChange={(v) => update("phone", v)} />
@@ -78,7 +78,7 @@ export function ResumeDocument({ data, onChange }: Props) {
             </>
           )}
         </div>
-        <div style={{ borderTop: `1px solid ${RULE}`, marginTop: 12 }} />
+        <div style={{ borderTop: `1px solid ${RULE}`, marginTop: 8 }} />
       </header>
 
       <Section title="Summary">
