@@ -231,12 +231,28 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     }
   };
 
-  // Header
-  writeBlock(data.name, 22, "bold", ACCENT, 1.3);
-  writeBlock(data.headline, 11, "bold", MUTED, 1.3);
-  y += 1;
+  // Header (centered)
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(22);
+  setColor(ACCENT);
+  pdf.text(data.name, A4_W / 2, y, { align: "center" });
+  y += (22 * 1.3) / 2.83465;
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(11);
+  setColor(MUTED);
+  pdf.text(data.headline, A4_W / 2, y, { align: "center" });
+  y += (11 * 1.3) / 2.83465 + 1;
   const contact = [data.email, data.phone, data.location, data.linkedin].filter(Boolean).join("   •   ");
-  writeBlock(contact, 9.5, "normal", MUTED, 1.3);
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(9.5);
+  setColor(MUTED);
+  const contactLines = pdf.splitTextToSize(contact, CONTENT_W) as string[];
+  const contactLineH = (9.5 * 1.3) / 2.83465;
+  for (const line of contactLines) {
+    ensure(contactLineH);
+    pdf.text(line, A4_W / 2, y, { align: "center" });
+    y += contactLineH;
+  }
 
   // Rule
   y += 1.5;
