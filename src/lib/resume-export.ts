@@ -342,8 +342,19 @@ export async function exportDOCX(data: ResumeData, name: string) {
       alignment: AlignmentType.JUSTIFIED,
       children: [body(data.summary)],
     }),
-    sectionHeading("Experience"),
   ];
+
+  if (data.topSkills && data.topSkills.length) {
+    children.push(sectionHeading("Top Skills"));
+    children.push(
+      new Paragraph({
+        children: [body(data.topSkills.join("  •  "), { bold: true, color: ACCENT_HEX })],
+      }),
+    );
+  }
+
+  children.push(sectionHeading("Experience"));
+
 
   data.experience.forEach((e) => {
     children.push(
