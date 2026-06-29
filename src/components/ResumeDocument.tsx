@@ -65,7 +65,7 @@ export function ResumeDocument({ data, onChange }: Props) {
           onChange={(v) => update("headline", v)}
           style={{ fontSize: 21, color: "#1e3a8a", marginTop: 0, fontWeight: 500, fontFamily: '"Times New Roman", Times, serif', textAlign: "center", display: "block" }}
         />
-        <div style={{ marginTop: 4, fontSize: 11.5, color: MUTED, textAlign: "center" }}>
+        <div style={{ marginTop: 14, fontSize: 11.5, color: MUTED, textAlign: "center" }}>
           <Editable value={data.email} onChange={(v) => update("email", v)} />
           <span style={{ margin: "0 10px", color: RULE }}>•</span>
           <Editable value={data.phone} onChange={(v) => update("phone", v)} />
