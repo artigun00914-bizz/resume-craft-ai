@@ -19,6 +19,7 @@ import type { ResumeData } from "@/types/resume";
 const A4_W = 210;
 const A4_H = 297;
 const MARGIN = 14;
+const BOTTOM_MARGIN = 8;
 const CONTENT_W = A4_W - MARGIN * 2;
 
 type RGB = [number, number, number];
