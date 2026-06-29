@@ -219,7 +219,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
       y = MARGIN;
     }
   };
-  const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5) => {
+  const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5, align: "left" | "justify" = "left") => {
     pdf.setFont("times", style);
     pdf.setFontSize(size);
     setColor(color);
@@ -227,7 +227,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     const lineH = (size * lh) / 2.83465;
     for (const line of lines) {
       ensure(lineH);
-      pdf.text(line, MARGIN, y);
+      pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
       y += lineH;
     }
   };
