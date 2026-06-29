@@ -57,6 +57,7 @@ function Index() {
       const r = localStorage.getItem(STORAGE_KEY);
       if (r) {
         const parsed: ResumeData = JSON.parse(r);
+        parsed.education = DEFAULT_PROFILE.education;
         setResume(normalizeDeepSyncLocation(parsed));
       }
     } catch {}
@@ -117,8 +118,8 @@ function Index() {
       });
       const full: ResumeData = {
         ...profile,
-        education: profile.education,
         ...result,
+        education: profile.education,
       };
       setHistory([]);
       setFuture([]);
