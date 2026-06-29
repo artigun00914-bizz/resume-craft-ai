@@ -151,7 +151,7 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "topSkills", "experience", "skills", "atsScore", "matchedKeywords"],
+          required: ["summary", "experience", "skills", "atsScore", "matchedKeywords"],
         },
       },
     };
