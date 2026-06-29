@@ -352,12 +352,12 @@ export async function exportDOCX(data: ResumeData, name: string) {
   const children: Paragraph[] = [
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: data.name, bold: true, size: 44, font: FONT, color: ACCENT_HEX })],
+      children: [new TextRun({ text: data.name, bold: true, size: 36, font: FONT, color: ACCENT_HEX })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 40 },
-      children: [new TextRun({ text: data.headline, size: 24, font: FONT, color: MUTED_HEX, bold: true })],
+      children: [new TextRun({ text: data.headline, size: 20, font: FONT, color: MUTED_HEX, bold: true })],
     }),
     new Paragraph({
       border: RULE_BORDER,
