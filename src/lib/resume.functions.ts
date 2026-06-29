@@ -181,18 +181,8 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("No tool call returned");
     const args = JSON.parse(call.function.arguments);
-    // Guarantee mandatory top skills are present and ordered first
-    const ts: string[] = Array.isArray(args.topSkills) ? args.topSkills.filter((s: any) => typeof s === "string") : [];
-    const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "");
-    const required: { label: string; match: (n: string) => boolean }[] = [
-      { label: "C++", match: (n) => n === "c++" },
-      { label: "Python", match: (n) => n === "python" },
-      { label: "Java", match: (n) => n === "java" },
-      { label: "C#", match: (n) => n === "c#" },
-      { label: ".NET", match: (n) => n === ".net" || n === "net" || n === "dotnet" },
-    ];
-    const kept = ts.filter((s) => !required.some((r) => r.match(norm(s))));
-    args.topSkills = [...required.map((r) => r.label), ...kept];
+    args.topSkills = [];
+
 
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });
