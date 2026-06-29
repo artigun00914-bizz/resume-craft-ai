@@ -35,7 +35,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   let y = MARGIN;
 
   const ensure = (need: number) => {
-    if (y + need > A4_H - MARGIN) {
+    if (y + need > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
@@ -155,7 +155,7 @@ export async function exportPDF(data: ResumeData, name: string) {
   data.experience.forEach((e) => {
     // Keep company header with title and first bullet on same page
     const headerBlock = 18;
-    if (y + headerBlock > A4_H - MARGIN) {
+    if (y + headerBlock > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
@@ -214,7 +214,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
 
   const setColor = (c: RGB) => pdf.setTextColor(c[0], c[1], c[2]);
   const ensure = (need: number) => {
-    if (y + need > A4_H - MARGIN) {
+    if (y + need > A4_H - BOTTOM_MARGIN) {
       pdf.addPage();
       y = MARGIN;
     }
