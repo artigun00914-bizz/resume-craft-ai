@@ -307,6 +307,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
     new Paragraph({
       numbering: { reference: "bullets", level: 0 },
       spacing: { after: 60 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [body(text)],
     });
 
