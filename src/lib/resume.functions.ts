@@ -121,7 +121,7 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
           type: "object",
           properties: {
             summary: { type: "string" },
-            topSkills: { type: "array", items: { type: "string" } },
+            
             experience: {
               type: "array",
               items: {
