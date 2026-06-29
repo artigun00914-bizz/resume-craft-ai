@@ -116,11 +116,12 @@ export async function exportPDF(data: ResumeData, name: string) {
     pdf.setFontSize(size);
     setColor(BODY);
     const indent = 4;
-    const lines = pdf.splitTextToSize(str, CONTENT_W - indent) as string[];
+    const maxW = CONTENT_W - indent;
+    const lines = pdf.splitTextToSize(str, maxW) as string[];
     lines.forEach((line, i) => {
       ensure(lineH);
       if (i === 0) pdf.text("•", MARGIN + 1, y);
-      pdf.text(line, MARGIN + indent, y);
+      pdf.text(line, MARGIN + indent, y, { align: "justify", maxWidth: maxW });
       y += lineH;
     });
   };
@@ -218,7 +219,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
       y = MARGIN;
     }
   };
-  const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5) => {
+  const writeBlock = (str: string, size: number, style: "normal" | "bold" | "italic", color: RGB, lh = 1.5, align: "left" | "justify" = "left") => {
     pdf.setFont("times", style);
     pdf.setFontSize(size);
     setColor(color);
@@ -226,7 +227,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
     const lineH = (size * lh) / 2.83465;
     for (const line of lines) {
       ensure(lineH);
-      pdf.text(line, MARGIN, y);
+      pdf.text(line, MARGIN, y, { align, maxWidth: CONTENT_W });
       y += lineH;
     }
   };
@@ -257,7 +258,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
   // Body
   const paragraphs = letter.split(/\n\s*\n/);
   for (const p of paragraphs) {
-    writeBlock(p.trim(), 11, "normal", BODY, 1.55);
+    writeBlock(p.trim(), 11, "normal", BODY, 1.55, "justify");
     y += 3;
   }
 
@@ -306,6 +307,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
     new Paragraph({
       numbering: { reference: "bullets", level: 0 },
       spacing: { after: 60 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [body(text)],
     });
 
