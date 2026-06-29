@@ -258,7 +258,7 @@ export async function exportCoverLetterPDF(data: ResumeData, letter: string, nam
   // Body
   const paragraphs = letter.split(/\n\s*\n/);
   for (const p of paragraphs) {
-    writeBlock(p.trim(), 11, "normal", BODY, 1.55);
+    writeBlock(p.trim(), 11, "normal", BODY, 1.55, "justify");
     y += 3;
   }
 
