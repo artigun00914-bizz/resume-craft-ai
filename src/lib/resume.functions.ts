@@ -8,6 +8,7 @@ export type ResumeData = {
   location: string;
   linkedin?: string;
   summary: string;
+  topSkills: string[];
   experience: {
     company: string;
     location: string;
@@ -29,20 +30,21 @@ const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-s
 - Tone: confident, specific, conversational-but-professional. Avoid clichés like "results-driven", "synergy", "leveraged".
 - Every bullet starts with a strong action verb and includes a quantified outcome (%, $, time saved, scale).
 - Mirror exact keywords/technologies from the job description naturally (no stuffing).
-- YEARS OF EXPERIENCE: Infer the required years from the JD and match the total career span as tightly as possible — target required years + 0-2 only (e.g., "5+ years" JD → ~5-7 year career; "3+ years" → ~3-5; "10+ years" → ~10-12; "senior/staff" with no number → ~8-10; "junior/entry" → ~1-3). Do NOT inflate. Adjust the earliest role's start date so durations are contiguous and end at the present. Keep the Deep Sync (current) role's start at Jan 2023 only if the calibrated span allows; if the JD calls for fewer years than (now − Jan 2023), shorten Deep Sync's start date accordingly.
-- ROLE COUNT & DURATIONS: Scale the number of work experiences to the calibrated span — 1-2 roles for ≤3 years, 2-3 roles for 4-6 years, 3-4 roles for 7-10 years, 4 roles for 10+ years. The most recent MUST be "Deep Sync" (Kirkland, WA). The company immediately before Deep Sync MUST be "TaskUS" (New Braunfels, TX). Invent any other prior companies with realistic names. Keep each prior role's duration realistic (1.5–3.5 years typical); avoid padding.
-- JOB TITLE PROGRESSION: Titles MUST show clear career growth toward the JD's target role. Walk the standard ladder appropriate to the JD's seniority, e.g.:
-  - JD = Senior  → Junior/Associate → (Mid) Software Engineer → Senior Software Engineer (current)
-  - JD = Staff   → Software Engineer → Senior → Staff Software Engineer (current)
-  - JD = Lead/Principal → Senior → Lead/Staff → Principal (current)
-  - JD = Mid    → Junior/Associate → Software Engineer (current)
-  - JD = Junior → Intern/Associate → Junior Software Engineer (current)
-  The current Deep Sync role's title MUST equal (or be one notch below) the JD's target title. Earlier roles use progressively more junior titles. Adapt the discipline word to the JD (e.g., Frontend, Backend, Full-Stack, Platform, Data, ML) instead of always "Software Engineer".
-- NATURAL CAREER ARC (avoid the "forced fit" feel): ~70-80% of bullets should directly map to the JD's stack and responsibilities. The remaining ~20-30% should be authentic adjacent or tangential work — a different language/framework, internal tools/DX, a brief foray into another domain, mentorship, OSS, legacy migration, or a cross-functional project. Distribute these across older roles.
-- BULLET COUNTS: 5-6 bullets for the current role, 4-5 for mid roles, 3 for the earliest. Each role should include at least one bullet that is NOT a direct JD keyword match but is still credible work for that seniority level. Earlier-career bullets must read at the right seniority (smaller scope, learning-oriented) — do not write principal-level impact in a junior role.
-- Summary: 3-4 sentences, first-person, achievement-led. State the total years of experience consistent with the calibrated career span (no inflation).
-- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies (concrete tools, frameworks, protocols, methodologies). Mirror exact JD keywords, but also include 2-4 adjacent technologies the candidate would plausibly know.
-- Projects: 2-3 projects. At least one should be tangential/personal (OSS, side project, hackathon) rather than a pure JD mirror.
+- WORK HISTORY IS FIXED (do NOT invent companies, dates, titles, or locations). Use EXACTLY these roles, in this order (most recent first), tailoring ONLY the bullets to the JD:
+  1. QUODD — Senior Software Engineer — New Jersey, United States — Jan 2022 – Present
+  2. Quick Base — Software Engineer — Greater Boston Area — Jan 2020 – Feb 2022
+  3. VersaTeach LLC — Software Programmer (Remote) — Albuquerque, New Mexico Area — Nov 2018 – May 2020
+  4. TradeStation — Software Engineer — Richardson, Texas — Nov 2018 – Jan 2020
+  5. CACI International Inc — Software Engineer — Rome, New York — Feb 2018 – Oct 2018
+  6. Los Alamos National Laboratory — R&D Robotics Intern — Los Alamos, New Mexico — May 2017 – Jul 2017
+  7. The University of New Mexico — Software Developer — Albuquerque, New Mexico Area — Aug 2016 – Jun 2017
+  8. Halo River Management Group — Full Stack Developer — Rio Rancho, NM — May 2016 – Jul 2016
+- BULLET COUNTS: 5-6 bullets for QUODD (current), 4-5 for Quick Base & TradeStation, 3-4 for VersaTeach & CACI, 2-3 for the earliest three roles. Keep bullets seniority-appropriate (earlier roles smaller scope / learning-oriented).
+- NATURAL CAREER ARC: ~70-80% of bullets directly map to the JD's stack/responsibilities; ~20-30% should be authentic adjacent work (other languages, internal tools, mentorship, OSS, migrations).
+- Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
+- TOP SKILLS: ALWAYS include a topSkills array of 5-8 short skill labels (single words / short phrases) tailored to the JD. The array MUST include "C#" and ".NET" as entries. Place the most JD-relevant skills first.
+- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies.
+- Projects: 2-3 projects. At least one should be tangential/personal (OSS, side project) rather than a pure JD mirror.
 - Certifications: Do NOT include a Certifications section. Return an empty array.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
@@ -65,11 +67,8 @@ CANDIDATE BASE PROFILE (use exactly):
 - Phone: ${data.profile.phone}
 - Location: ${data.profile.location}
 - Education: ${data.profile.education.degree} — ${data.profile.education.school}
-- Most recent company (must appear first): Deep Sync (Kirkland, WA). Set the title to match the JD's target seniority (or one notch below) and set the start date so the total career span matches the JD's required years tightly (see SYSTEM rules). Default start is Jan 2023, but shorten it if the JD calls for fewer total years.
-- The company immediately before Deep Sync MUST be "TaskUS" (New Braunfels, TX).
-- Generate any other prior companies (1–2 additional) based on the calibrated span. Titles must show a clear upward progression toward the current role (e.g., Junior → Mid → Senior). Weave in 1-2 adjacent/tangential bullets per older role so the arc feels authentic.
 
-Tailor every bullet to the job description above. Return JSON via the tool.`;
+Use the FIXED work history specified in the SYSTEM rules (8 roles, exact companies/titles/dates/locations). Tailor only the bullets, summary, skills, topSkills, projects, tools, and matchedKeywords to the job description. The topSkills array MUST include "C#" and ".NET". Return JSON via the tool.`;
 
     const tool = {
       type: "function",
@@ -80,6 +79,7 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
           type: "object",
           properties: {
             summary: { type: "string" },
+            topSkills: { type: "array", items: { type: "string" } },
             experience: {
               type: "array",
               items: {
@@ -116,7 +116,7 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
             atsScore: { type: "number" },
             matchedKeywords: { type: "array", items: { type: "string" } },
           },
-          required: ["summary", "experience", "skills", "projects", "tools", "atsScore", "matchedKeywords"],
+          required: ["summary", "topSkills", "experience", "skills", "projects", "tools", "atsScore", "matchedKeywords"],
         },
       },
     };
@@ -146,6 +146,14 @@ Tailor every bullet to the job description above. Return JSON via the tool.`;
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("No tool call returned");
     const args = JSON.parse(call.function.arguments);
+    // Guarantee C# and .NET are present in topSkills
+    const ts: string[] = Array.isArray(args.topSkills) ? args.topSkills.filter((s: any) => typeof s === "string") : [];
+    const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "");
+    const hasCS = ts.some((s) => norm(s) === "c#");
+    const hasNet = ts.some((s) => norm(s) === ".net" || norm(s) === "net");
+    if (!hasCS) ts.push("C#");
+    if (!hasNet) ts.push(".NET");
+    args.topSkills = ts;
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });
 
