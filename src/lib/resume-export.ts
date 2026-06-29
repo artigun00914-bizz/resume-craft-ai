@@ -44,7 +44,7 @@ export async function exportPDF(data: ResumeData, name: string) {
 
   const text = (
     str: string,
-    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "justify"; maxW?: number; lineHeight?: number; font?: string } = {}
+    opts: { size?: number; style?: "normal" | "bold" | "italic"; color?: RGB; x?: number; align?: "left" | "right" | "center" | "justify"; maxW?: number; lineHeight?: number; font?: string } = {}
   ) => {
     const size = opts.size ?? 10;
     const style = opts.style ?? "normal";
