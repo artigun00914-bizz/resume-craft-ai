@@ -207,7 +207,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     const w = pdf.getTextWidth(ed.school);
     pdf.setFont("times", "normal");
     setColor(BODY);
-    pdf.text(` — ${ed.degree}`, MARGIN + w, y);
+    pdf.text(` ${ed.degree}`, MARGIN + w, y);
     y += lineH;
   });
 
@@ -423,7 +423,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
     children.push(
       new Paragraph({
         spacing: { after: 40 },
-        children: [body(ed.school, { bold: true, color: ACCENT_HEX }), body(` — ${ed.degree}`)],
+        children: [body(ed.school, { bold: true, color: ACCENT_HEX }), body(` ${ed.degree}`)],
       }),
     ),
   );
