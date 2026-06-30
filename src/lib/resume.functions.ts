@@ -108,7 +108,7 @@ CANDIDATE BASE PROFILE (use exactly):
 - Email: ${data.profile.email}
 - Phone: ${data.profile.phone}
 - Location: ${data.profile.location}
-- Education: ${data.profile.education.degree} — ${data.profile.education.school}
+- Education: ${data.profile.education.school} ${data.profile.education.degree}
 
 Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. EVERY ground-truth fact for EVERY role MUST be reflected in the bullets — do not silently drop any item to chase JD match. Rephrase to mirror JD keywords and quantify when natural. Do NOT invent stack or scope outside the ground truth, except for the LANGUAGE COVERAGE rule which allows one bridging bullet at QUODD or TradeStation to surface C# / .NET. All five of C++, Python, Java, C#, and .NET MUST be named explicitly in the bullets of the experience section AND in the skills section. Do NOT generate projects, tools, or topSkills sections. Return JSON via the tool.`;
 
