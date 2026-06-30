@@ -207,7 +207,7 @@ export async function exportPDF(data: ResumeData, name: string) {
     const w = pdf.getTextWidth(ed.school);
     pdf.setFont("times", "normal");
     setColor(BODY);
-    pdf.text(` — ${ed.degree}`, MARGIN + w, y);
+    pdf.text(` ${ed.degree}`, MARGIN + w, y);
     y += lineH;
   });
 
