@@ -23,8 +23,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const STORAGE_KEY = "ai-resume:v1";
-const PROFILE_KEY = "ai-resume:profile:v1";
+const STORAGE_KEY = "ai-resume:v2";
+const PROFILE_KEY = "ai-resume:profile:v2";
 const DEEP_SYNC_LOCATION = "Redmond, WA";
 
 function normalizeProfileBasicInfo(profile: typeof DEFAULT_PROFILE): typeof DEFAULT_PROFILE {
