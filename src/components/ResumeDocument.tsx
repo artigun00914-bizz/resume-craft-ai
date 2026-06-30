@@ -208,7 +208,7 @@ export function ResumeDocument({ data, onChange }: Props) {
               }}
               style={{ fontWeight: 700, color: ACCENT }}
             />
-            <span> — </span>
+            <span> </span>
             <Editable
               value={ed.degree}
               onChange={(v) => {
