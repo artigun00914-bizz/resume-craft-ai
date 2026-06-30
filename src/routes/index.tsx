@@ -27,32 +27,6 @@ const STORAGE_KEY = "ai-resume:v2";
 const PROFILE_KEY = "ai-resume:profile:v2";
 const DEEP_SYNC_LOCATION = "Redmond, WA";
 
-function normalizeProfileBasicInfo(profile: typeof DEFAULT_PROFILE): typeof DEFAULT_PROFILE {
-  return {
-    ...profile,
-    name: DEFAULT_PROFILE.name,
-    headline: DEFAULT_PROFILE.headline,
-    email: DEFAULT_PROFILE.email,
-    phone: DEFAULT_PROFILE.phone,
-    location: DEFAULT_PROFILE.location,
-    linkedin: DEFAULT_PROFILE.linkedin,
-    education: DEFAULT_PROFILE.education,
-  };
-}
-
-function normalizeResumeBasicInfo(data: ResumeData): ResumeData {
-  return {
-    ...data,
-    name: DEFAULT_PROFILE.name,
-    headline: DEFAULT_PROFILE.headline,
-    email: DEFAULT_PROFILE.email,
-    phone: DEFAULT_PROFILE.phone,
-    location: DEFAULT_PROFILE.location,
-    linkedin: DEFAULT_PROFILE.linkedin,
-    education: DEFAULT_PROFILE.education,
-  };
-}
-
 function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
   return {
     ...data,
@@ -64,6 +38,7 @@ function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
       ) ?? [],
   };
 }
+
 
 function Index() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
