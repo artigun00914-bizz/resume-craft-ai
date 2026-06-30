@@ -27,32 +27,6 @@ const STORAGE_KEY = "ai-resume:v2";
 const PROFILE_KEY = "ai-resume:profile:v2";
 const DEEP_SYNC_LOCATION = "Redmond, WA";
 
-function normalizeProfileBasicInfo(profile: typeof DEFAULT_PROFILE): typeof DEFAULT_PROFILE {
-  return {
-    ...profile,
-    name: DEFAULT_PROFILE.name,
-    headline: DEFAULT_PROFILE.headline,
-    email: DEFAULT_PROFILE.email,
-    phone: DEFAULT_PROFILE.phone,
-    location: DEFAULT_PROFILE.location,
-    linkedin: DEFAULT_PROFILE.linkedin,
-    education: DEFAULT_PROFILE.education,
-  };
-}
-
-function normalizeResumeBasicInfo(data: ResumeData): ResumeData {
-  return {
-    ...data,
-    name: DEFAULT_PROFILE.name,
-    headline: DEFAULT_PROFILE.headline,
-    email: DEFAULT_PROFILE.email,
-    phone: DEFAULT_PROFILE.phone,
-    location: DEFAULT_PROFILE.location,
-    linkedin: DEFAULT_PROFILE.linkedin,
-    education: DEFAULT_PROFILE.education,
-  };
-}
-
 function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
   return {
     ...data,
@@ -64,6 +38,7 @@ function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
       ) ?? [],
   };
 }
+
 
 function Index() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
@@ -79,17 +54,14 @@ function Index() {
   useEffect(() => {
     try {
       const p = localStorage.getItem(PROFILE_KEY);
-      const nextProfile = p ? normalizeProfileBasicInfo(JSON.parse(p)) : DEFAULT_PROFILE;
-      setProfile(nextProfile);
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(nextProfile));
+      if (p) setProfile({ ...DEFAULT_PROFILE, ...JSON.parse(p) });
       const r = localStorage.getItem(STORAGE_KEY);
       if (r) {
         const parsed: ResumeData = JSON.parse(r);
-        const nextResume = normalizeDeepSyncLocation(normalizeResumeBasicInfo(parsed));
-        setResume(nextResume);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextResume));
+        setResume(normalizeDeepSyncLocation(parsed));
       }
     } catch {}
+
   }, []);
 
   // Persist
@@ -148,14 +120,15 @@ function Index() {
       const full: ResumeData = {
         ...profile,
         ...result,
-        name: DEFAULT_PROFILE.name,
-        headline: DEFAULT_PROFILE.headline,
-        email: DEFAULT_PROFILE.email,
-        phone: DEFAULT_PROFILE.phone,
-        location: DEFAULT_PROFILE.location,
-        linkedin: DEFAULT_PROFILE.linkedin,
-        education: DEFAULT_PROFILE.education,
+        name: profile.name,
+        headline: profile.headline,
+        email: profile.email,
+        phone: profile.phone,
+        location: profile.location,
+        linkedin: profile.linkedin,
+        education: profile.education,
       };
+
       setHistory([]);
       setFuture([]);
       setResume(normalizeDeepSyncLocation(full));
