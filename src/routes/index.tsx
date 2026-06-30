@@ -27,6 +27,32 @@ const STORAGE_KEY = "ai-resume:v1";
 const PROFILE_KEY = "ai-resume:profile:v1";
 const DEEP_SYNC_LOCATION = "Redmond, WA";
 
+function normalizeProfileBasicInfo(profile: typeof DEFAULT_PROFILE): typeof DEFAULT_PROFILE {
+  return {
+    ...profile,
+    name: DEFAULT_PROFILE.name,
+    headline: DEFAULT_PROFILE.headline,
+    email: DEFAULT_PROFILE.email,
+    phone: DEFAULT_PROFILE.phone,
+    location: DEFAULT_PROFILE.location,
+    linkedin: DEFAULT_PROFILE.linkedin,
+    education: DEFAULT_PROFILE.education,
+  };
+}
+
+function normalizeResumeBasicInfo(data: ResumeData): ResumeData {
+  return {
+    ...data,
+    name: DEFAULT_PROFILE.name,
+    headline: DEFAULT_PROFILE.headline,
+    email: DEFAULT_PROFILE.email,
+    phone: DEFAULT_PROFILE.phone,
+    location: DEFAULT_PROFILE.location,
+    linkedin: DEFAULT_PROFILE.linkedin,
+    education: DEFAULT_PROFILE.education,
+  };
+}
+
 function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
   return {
     ...data,
@@ -53,12 +79,15 @@ function Index() {
   useEffect(() => {
     try {
       const p = localStorage.getItem(PROFILE_KEY);
-      if (p) setProfile(JSON.parse(p));
+      const nextProfile = p ? normalizeProfileBasicInfo(JSON.parse(p)) : DEFAULT_PROFILE;
+      setProfile(nextProfile);
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(nextProfile));
       const r = localStorage.getItem(STORAGE_KEY);
       if (r) {
         const parsed: ResumeData = JSON.parse(r);
-        parsed.education = DEFAULT_PROFILE.education;
-        setResume(normalizeDeepSyncLocation(parsed));
+        const nextResume = normalizeDeepSyncLocation(normalizeResumeBasicInfo(parsed));
+        setResume(nextResume);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextResume));
       }
     } catch {}
   }, []);
@@ -119,7 +148,13 @@ function Index() {
       const full: ResumeData = {
         ...profile,
         ...result,
-        education: profile.education,
+        name: DEFAULT_PROFILE.name,
+        headline: DEFAULT_PROFILE.headline,
+        email: DEFAULT_PROFILE.email,
+        phone: DEFAULT_PROFILE.phone,
+        location: DEFAULT_PROFILE.location,
+        linkedin: DEFAULT_PROFILE.linkedin,
+        education: DEFAULT_PROFILE.education,
       };
       setHistory([]);
       setFuture([]);
