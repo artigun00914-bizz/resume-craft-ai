@@ -54,17 +54,14 @@ function Index() {
   useEffect(() => {
     try {
       const p = localStorage.getItem(PROFILE_KEY);
-      const nextProfile = p ? normalizeProfileBasicInfo(JSON.parse(p)) : DEFAULT_PROFILE;
-      setProfile(nextProfile);
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(nextProfile));
+      if (p) setProfile({ ...DEFAULT_PROFILE, ...JSON.parse(p) });
       const r = localStorage.getItem(STORAGE_KEY);
       if (r) {
         const parsed: ResumeData = JSON.parse(r);
-        const nextResume = normalizeDeepSyncLocation(normalizeResumeBasicInfo(parsed));
-        setResume(nextResume);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextResume));
+        setResume(normalizeDeepSyncLocation(parsed));
       }
     } catch {}
+
   }, []);
 
   // Persist
