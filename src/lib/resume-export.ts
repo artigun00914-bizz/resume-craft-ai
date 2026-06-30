@@ -423,7 +423,7 @@ export async function exportDOCX(data: ResumeData, name: string) {
     children.push(
       new Paragraph({
         spacing: { after: 40 },
-        children: [body(ed.school, { bold: true, color: ACCENT_HEX }), body(` — ${ed.degree}`)],
+        children: [body(ed.school, { bold: true, color: ACCENT_HEX }), body(` ${ed.degree}`)],
       }),
     ),
   );
