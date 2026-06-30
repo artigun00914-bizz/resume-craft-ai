@@ -120,14 +120,15 @@ function Index() {
       const full: ResumeData = {
         ...profile,
         ...result,
-        name: DEFAULT_PROFILE.name,
-        headline: DEFAULT_PROFILE.headline,
-        email: DEFAULT_PROFILE.email,
-        phone: DEFAULT_PROFILE.phone,
-        location: DEFAULT_PROFILE.location,
-        linkedin: DEFAULT_PROFILE.linkedin,
-        education: DEFAULT_PROFILE.education,
+        name: profile.name,
+        headline: profile.headline,
+        email: profile.email,
+        phone: profile.phone,
+        location: profile.location,
+        linkedin: profile.linkedin,
+        education: profile.education,
       };
+
       setHistory([]);
       setFuture([]);
       setResume(normalizeDeepSyncLocation(full));
