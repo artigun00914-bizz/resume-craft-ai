@@ -74,6 +74,9 @@ GLOBAL RULES:
 - BULLET COUNTS: 5-7 bullets each for Sapience AI, Prosper AI, Adobe, and Google. EVERY ground-truth item for EVERY role MUST appear in the bullets (you may merge two closely related items into one bullet, but no fact may be dropped).
 - TAILORING: Mirror the JD's exact keywords/technologies naturally inside bullets where they truthfully fit the role's ground truth. Never invent stack or scope outside ground truth. For Sapience AI and Prosper AI, keep the small-company / startup / founding-engineer voice — do NOT write enterprise-scale corporate bullets for those two.
 
+LANGUAGE RULE (CRITICAL):
+- WRITE THE ENTIRE RESUME IN ENGLISH ONLY. Every field (summary, bullets, skills, matchedKeywords, everything) MUST be 100% English. Do NOT include any non-English characters, words, or phrases (no Persian/Farsi, Arabic, Chinese, Cyrillic, etc.). ASCII/Latin characters only.
+
 SUMMARY RULES (IMPORTANT):
 - Keep the summary SIMPLE and NORMAL. Plain, calm, human tone. 2-3 short sentences.
 - Do NOT stuff JD keywords into the summary. Do NOT tailor the summary aggressively to the job description.
