@@ -26,77 +26,78 @@ export type ResumeData = {
   matchedKeywords: string[];
 };
 
-const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-sounding senior engineer resumes. Output ONLY valid JSON matching the provided tool schema. Rules:
-- Tone: confident, specific, conversational-but-professional. Avoid clichés like "results-driven", "synergy", "leveraged".
-- Every bullet starts with a strong action verb and includes a quantified outcome (%, $, time saved, scale).
-- Mirror exact keywords/technologies from the job description naturally (no stuffing).
-- WORK HISTORY IS FIXED (do NOT invent companies, dates, titles, or locations). Use EXACTLY these roles, in this order (most recent first). Each role's "GROUND TRUTH" lists the candidate's real work — every bullet you write MUST be grounded in one of those facts (rephrased/tailored to JD keywords, quantified where reasonable), and EVERY ground-truth item must appear across the bullets in some form (either as a primary bullet or merged into one). Do NOT fabricate work that isn't represented in ground truth.
+const SYSTEM = `You are an elite resume writer who crafts ATS-optimized, human-sounding senior engineer resumes. Output ONLY valid JSON matching the provided tool schema.
 
-  1. QUODD — Senior Software Engineer — New Jersey, United States — Jan 2022 – Present
-     GROUND TRUTH:
-     - Ensure market data feed ingress from exchanges is processed properly
-     - Write 100% testable C++ code with minimal code churn
-     - Built a CI/CD pipeline that has shipped 100+ releases to QA and production
-     - Feed experience: CTA, UTP, GIDS, CTF, OPRA, RussellTick, CME
-     - Protocols: raw binary, SBE
-     - On-call rotation, including 3 AM production incident response
+GLOBAL RULES:
+- Tone: confident, specific, professional. Avoid clichés like "results-driven", "synergy", "leveraged".
+- Every experience bullet starts with a strong action verb. Quantify outcomes where reasonable but do NOT fabricate numbers.
+- WORK HISTORY IS FIXED. Do NOT invent companies, dates, titles, or locations. Use EXACTLY these roles, in this order (most recent first):
 
-  2. Quick Base — Software Engineer — Greater Boston Area — Jan 2020 – Feb 2022
-     GROUND TRUTH:
-     - Boosted overall system performance ~20% via asynchronous programming on the networking code (C++)
-     - Drove testing effort that produced a 400% increase in C++ source files under test
+  1. Sapience AI — Full-Stack AI/ML Developer — Remote — March 2026 – Present
+     COMPANY CONTEXT: Sapience AI is a SMALL AI startup building full-stack AI-powered applications and production AI systems. Bullets MUST sound like startup engineering work at a small company — hands-on across the entire stack, shipping features end-to-end, not big-corp scope. Ground truth:
+     - Develops full-stack, AI-powered applications and production AI systems
+     - Designs and implements AI capabilities across backend services, APIs, data workflows, and user-facing apps
+     - Builds scalable software solutions integrating ML models and LLMs
+     - Collaborates across product and engineering to turn business requirements into AI products
+     - Contributes to application architecture, model integration, deployment, testing, and production operations
 
-  3. VersaTeach LLC — Software Programmer (Remote) — Albuquerque, New Mexico Area — Nov 2018 – May 2020
-     GROUND TRUTH:
-     - Wrote scripts to periodically migrate resumes from on-prem LAMP filesystem to AWS S3, running continuously on EC2 until decommission
-     - Part-time maintenance of the company website
-     - Built business-model solutions to advertise and grow services
+  2. Prosper AI — Founding Full-Stack AI Engineer — Remote — August 2023 – October 2025
+     COMPANY CONTEXT: Prosper AI is a SMALL healthcare-focused generative AI startup. Bullets MUST reflect founding-engineer work at a tiny company — owning architecture, wearing many hats, shipping the core product, small-team velocity. Ground truth:
+     - Founding engineer responsible for architecture and development of a healthcare-focused generative AI platform
+     - Built an LLM-powered conversational voice platform integrated with 80+ Electronic Health Record (EHR) systems
+     - Automation handled ~50% of healthcare call-center workflows
+     - Designed full-stack components spanning conversational AI, backend services, APIs, data integrations, and web interfaces
+     - Built scalable systems for processing healthcare conversations and coordinating AI-assisted workflows
+     - Led technical execution in a startup environment: product strategy, architecture, implementation, production delivery
+     - Integrated generative AI and NLP into customer-facing healthcare applications
+     - Improved operational efficiency by automating repetitive communication and admin processes
 
-  4. TradeStation — Software Engineer — Richardson, Texas — Nov 2018 – Jan 2020
-     GROUND TRUTH:
-     - Built a REST API on top of a large legacy C++ codebase, exposing software functionality as RESTful resources to enable automation
-     - Used the C++ REST API plus PowerShell to automate user failovers
-     - Leveraged AWS for software testing
+  3. Adobe — Computer Scientist — February 2020 – July 2023
+     Ground truth:
+     - Developed enterprise AI services and customer-facing AI solutions
+     - Built cloud-native microservices for scalable, reliable production environments
+     - Contributed to distributed ML infrastructure supporting enterprise AI workloads
+     - Designed backend services and APIs to integrate ML capabilities into Adobe products
+     - Supported development and deployment of production ML systems
+     - Worked across AI engineering, cloud infrastructure, distributed systems, and application development
+     - Applied engineering best practices for reliability, maintainability, scalability, and observability
 
-  5. CACI International Inc — Software Engineer — Rome, New York — Feb 2018 – Oct 2018
-     GROUND TRUTH:
-     - Wrote multithreaded SOA software in Java, C++, and Python
-     - Linux development with virtual machines, Docker, and databases
+  4. Google — Software Engineer II, L3 — September 2016 – February 2020
+     Ground truth:
+     - Developed machine learning platforms and cloud-based AI services
+     - Contributed to Contact Center AI systems and integrations
+     - Built and supported Kubernetes-based cloud infrastructure for scalable apps and ML workloads
+     - Developed integrations with Google Cloud AI Platform services
+     - Designed software components for distributed systems and production cloud environments
+     - Collaborated with cross-functional engineering teams on reliable AI and cloud platform capabilities
 
-  6. Los Alamos National Laboratory — R&D Robotics Intern — Los Alamos, New Mexico — May 2017 – Jul 2017
-     GROUND TRUTH:
-     - Implemented software for the TA-53 neutron beam using the EPICS interface
-     - Wrote/modified BASH scripts and config files on Linux
+- BULLET COUNTS: 5-7 bullets each for Sapience AI, Prosper AI, Adobe, and Google. EVERY ground-truth item for EVERY role MUST appear in the bullets (you may merge two closely related items into one bullet, but no fact may be dropped).
+- TAILORING: Mirror the JD's exact keywords/technologies naturally inside bullets where they truthfully fit the role's ground truth. Never invent stack or scope outside ground truth. For Sapience AI and Prosper AI, keep the small-company / startup / founding-engineer voice — do NOT write enterprise-scale corporate bullets for those two.
 
-  7. The University of New Mexico — Software Developer — Albuquerque, New Mexico Area — Aug 2016 – Jun 2017
-     GROUND TRUTH:
-     - Built a Java software suite to classify patient stimulus reactions alongside real-time EEG brainwave data
-     - Bridged Java frontend with a faster C/C++ backend to drive the EEG hardware
+SUMMARY RULES (IMPORTANT):
+- Keep the summary SIMPLE and NORMAL. Plain, calm, human tone. 2-3 short sentences.
+- Do NOT stuff JD keywords into the summary. Do NOT tailor the summary aggressively to the job description.
+- State experience level, general focus area (full-stack AI/ML engineering, LLMs, cloud), and career background at a high level only.
 
-  8. Halo River Management Group — Full Stack Developer — Rio Rancho, NM — May 2016 – Jul 2016
-     GROUND TRUTH:
-     - Rewrote pages of the company web portal against their database
-     - Wrote PHP scripts to connect the frontend with MySQL
-     - Wrote and optimized MySQL queries
+SKILLS RULES:
+- 6-8 categories, each with 6-10 specific comma-separated technologies.
+- Mirror JD keywords naturally, but also cover the candidate's real stack: LLMs, Generative AI, Conversational AI, RAG, Multi-Agent, LangChain, OpenAI API, TensorFlow, Kubeflow, Dialogflow; Python, TypeScript, JavaScript, Java, Go, SQL; React, Next.js, Node.js, NestJS, Express, Django, FastAPI; REST, GraphQL, microservices; GCP, AWS, Kubernetes, Docker, Terraform; CI/CD, Jenkins, Grafana, Prometheus, Datadog; PostgreSQL, MongoDB, Redis, Elasticsearch, Firestore, BigQuery.
 
-- BULLET COUNTS: 5-7 bullets for QUODD, 4-5 for Quick Base, 4-5 for TradeStation, 3-4 for VersaTeach & CACI, 2-3 for the earliest three roles. EVERY ground-truth fact for EVERY role MUST appear in the bullets — do NOT drop any ground-truth item. You may merge two closely-related ground-truth items into one bullet, but no fact may be omitted. Earlier roles stay smaller-scope / learning-oriented.
-- NATURAL CAREER ARC: tailor wording/keywords to the JD, but never invent stack or scope that isn't in ground truth. If the JD's stack differs from a role's ground truth, keep the bullet truthful and only bridge with phrasing (e.g. "applied similar async patterns later in...").
-- LANGUAGE COVERAGE (MANDATORY): across the full experience section combined, ALL FIVE of C++, Python, Java, C#, and .NET must each be named in at least one bullet. C++ is already grounded at QUODD/Quick Base/TradeStation/CACI; Python at QUODD/CACI; Java at CACI/UNM. For C# and .NET (which aren't in ground truth), surface them truthfully by adding one bullet at QUODD or TradeStation describing related interop / tooling / supporting work the candidate did alongside the C++ stack (e.g. ".NET-based internal tooling", "C# automation scripts alongside PowerShell"). Keep it plausible and tied to the existing role context. Do NOT fabricate entire projects.
-- Summary: 3-4 sentences, first-person, achievement-led. Total experience is ~8 years (since 2018, full-time).
-- Skills: 7-9 categories tailored to the JD. Each "items" string MUST list 6-10 specific, comma-separated technologies. Mirror JD keywords plus 2-4 adjacent technologies. Include at least one category that surfaces the candidate's real stack (C++, Python, Java, C#/.NET, PHP/MySQL, AWS/EC2/S3, Docker, Linux, PowerShell, EPICS, SBE/binary market-data protocols). All five of C++, Python, Java, C#, and .NET MUST appear somewhere in the skills section.
-
-- Projects: Do NOT include a Projects section. Return an empty array.
-- Certifications: Do NOT include a Certifications section. Return an empty array.
-- Tools & Technologies: Do NOT include a Tools & Technologies section. Return an empty array.
+OTHER:
+- projects: return an empty array.
+- certifications: return an empty array.
+- tools: return an empty array.
+- topSkills: return an empty array.
 - atsScore: realistic 82-96 based on JD match.
 - matchedKeywords: 12-20 keywords actually present in JD and in resume.`;
 
 export const generateResume = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => data as { jobDescription: string; profile: { name: string; headline: string; email: string; phone: string; location: string; education: { school: string; degree: string } } })
+  .inputValidator((data: unknown) => data as { jobDescription: string; profile: { name: string; headline: string; email: string; phone: string; location: string; education: { school: string; degree: string }[] } })
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY not set");
 
+    const eduLines = data.profile.education.map((e) => `- ${e.school} — ${e.degree}`).join("\n");
     const userPrompt = `JOB DESCRIPTION:
 """
 ${data.jobDescription}
@@ -108,9 +109,10 @@ CANDIDATE BASE PROFILE (use exactly):
 - Email: ${data.profile.email}
 - Phone: ${data.profile.phone}
 - Location: ${data.profile.location}
-- Education: ${data.profile.education.school} ${data.profile.education.degree}
+- Education:
+${eduLines}
 
-Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rules. EVERY ground-truth fact for EVERY role MUST be reflected in the bullets — do not silently drop any item to chase JD match. Rephrase to mirror JD keywords and quantify when natural. Do NOT invent stack or scope outside the ground truth, except for the LANGUAGE COVERAGE rule which allows one bridging bullet at QUODD or TradeStation to surface C# / .NET. All five of C++, Python, Java, C#, and .NET MUST be named explicitly in the bullets of the experience section AND in the skills section. Do NOT generate projects, tools, or topSkills sections. Return JSON via the tool.`;
+Follow the SYSTEM rules. Keep the summary simple and NOT aggressively tailored to the JD. Write Sapience AI and Prosper AI bullets with a small-startup / founding-engineer voice, aligned to those companies' platforms — not corporate-scale. Cover EVERY ground-truth item for EVERY role. Do NOT invent stack outside ground truth. Return JSON via the tool.`;
 
     const tool = {
       type: "function",
@@ -121,7 +123,6 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
           type: "object",
           properties: {
             summary: { type: "string" },
-            
             experience: {
               type: "array",
               items: {
@@ -182,7 +183,6 @@ Use the FIXED work history with GROUND TRUTH bullets specified in the SYSTEM rul
     if (!call) throw new Error("No tool call returned");
     const args = JSON.parse(call.function.arguments);
     args.topSkills = [];
-
 
     return args as Omit<ResumeData, "name" | "headline" | "email" | "phone" | "location" | "education">;
   });
