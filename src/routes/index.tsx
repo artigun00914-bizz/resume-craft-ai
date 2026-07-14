@@ -114,7 +114,7 @@ function Index() {
       const result = await generateResume({
         data: {
           jobDescription: jd,
-          profile: { ...profile, education: profile.education[0] },
+          profile: { ...profile, education: profile.education },
         },
       });
       const full: ResumeData = {
