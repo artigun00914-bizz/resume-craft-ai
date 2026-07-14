@@ -80,8 +80,18 @@ SUMMARY RULES (IMPORTANT):
 - State experience level, general focus area (full-stack AI/ML engineering, LLMs, cloud), and career background at a high level only.
 
 SKILLS RULES:
-- 6-8 categories, each with 6-10 specific comma-separated technologies.
-- Mirror JD keywords naturally, but also cover the candidate's real stack: LLMs, Generative AI, Conversational AI, RAG, Multi-Agent, LangChain, OpenAI API, TensorFlow, Kubeflow, Dialogflow; Python, TypeScript, JavaScript, Java, Go, SQL; React, Next.js, Node.js, NestJS, Express, Django, FastAPI; REST, GraphQL, microservices; GCP, AWS, Kubernetes, Docker, Terraform; CI/CD, Jenkins, Grafana, Prometheus, Datadog; PostgreSQL, MongoDB, Redis, Elasticsearch, Firestore, BigQuery.
+- 8-10 categories, each with 8-12 specific comma-separated technologies. Be thorough and relevant — this section should read as a comprehensive, senior-level tech inventory.
+- Always mirror JD keywords naturally when they truthfully fit the candidate's background, AND cover the full real stack across these categories:
+  • AI / ML & LLMs: LLMs, Generative AI, Conversational AI, RAG, Multi-Agent systems, Prompt Engineering, Fine-tuning, Embeddings, Vector Search, LangChain, LlamaIndex, OpenAI API, Anthropic Claude, Hugging Face, TensorFlow, PyTorch, Kubeflow, MLflow, Dialogflow, Vertex AI, SageMaker
+  • Languages: Python, TypeScript, JavaScript, Java, Go, SQL, Bash
+  • Frontend: React, Next.js, Redux, TanStack Query, Tailwind CSS, HTML5, CSS3, Vite
+  • Backend & APIs: Node.js, NestJS, Express, Django, FastAPI, REST, GraphQL, gRPC, WebSockets, microservices, event-driven architecture
+  • Cloud & DevOps: GCP, AWS, Azure, Kubernetes, Docker, Terraform, Helm, Serverless, Cloudflare Workers
+  • CI/CD & Observability: GitHub Actions, Jenkins, GitLab CI, ArgoCD, Grafana, Prometheus, Datadog, Sentry, OpenTelemetry
+  • Data & Storage: PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, Firestore, BigQuery, Snowflake, Kafka, Pub/Sub
+  • Healthcare & Integrations (when relevant to JD): HL7, FHIR, EHR integrations, HIPAA compliance, Twilio, voice/telephony platforms
+  • Testing & Quality: Jest, Vitest, Pytest, Playwright, Cypress, TDD
+- Pick the 8-10 most relevant categories for the given JD, and prioritize items that overlap with JD keywords at the front of each list.
 
 OTHER:
 - projects: return an empty array.
