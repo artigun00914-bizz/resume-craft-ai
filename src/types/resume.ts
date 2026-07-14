@@ -34,15 +34,19 @@ export type ResumeData = {
 
 export const DEFAULT_PROFILE = {
   name: "Arthur Faison",
-  headline: "SENIOR SOFTWARE ENGINEER",
-  email: "mathaey_senit4@outlook.com",
-  phone: "+1 (986) 255-1098",
-  location: "Richardson, TX, US",
-  linkedin: "linkedin.com/in/arthurnap24",
+  headline: "SENIOR FULL-STACK AI/ML ENGINEER",
+  email: "arthurfaison828@gmail.com",
+  phone: "+1 (410) 615-0749",
+  location: "Tamiment, PA, US",
+  linkedin: "linkedin.com/in/the-arthur-vega",
   education: [
     {
-      school: "The University of New Mexico",
-      degree: "Computer Science, Engineering · (2013 - 2017)",
+      school: "Stanford University",
+      degree: "Master of Science in Computer Science · (2014 - 2016)",
+    },
+    {
+      school: "University of Phoenix",
+      degree: "Bachelor of Science in Computer Science · (2010 - 2014)",
     },
   ],
 };

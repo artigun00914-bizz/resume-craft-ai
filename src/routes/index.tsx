@@ -23,8 +23,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const STORAGE_KEY = "ai-resume:v2";
-const PROFILE_KEY = "ai-resume:profile:v2";
+const STORAGE_KEY = "ai-resume:v3";
+const PROFILE_KEY = "ai-resume:profile:v3";
 const DEEP_SYNC_LOCATION = "Redmond, WA";
 
 function normalizeDeepSyncLocation(data: ResumeData): ResumeData {
@@ -114,7 +114,7 @@ function Index() {
       const result = await generateResume({
         data: {
           jobDescription: jd,
-          profile: { ...profile, education: profile.education[0] },
+          profile: { ...profile, education: profile.education },
         },
       });
       const full: ResumeData = {
