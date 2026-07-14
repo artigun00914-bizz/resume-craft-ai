@@ -52,7 +52,7 @@ GLOBAL RULES:
      - Integrated generative AI and NLP into customer-facing healthcare applications
      - Improved operational efficiency by automating repetitive communication and admin processes
 
-  3. Adobe — Computer Scientist — February 2020 – July 2023
+  3. Adobe — Computer Scientist — San Jose, CA — February 2020 – July 2023
      Ground truth:
      - Developed enterprise AI services and customer-facing AI solutions
      - Built cloud-native microservices for scalable, reliable production environments
