@@ -62,7 +62,7 @@ GLOBAL RULES:
      - Worked across AI engineering, cloud infrastructure, distributed systems, and application development
      - Applied engineering best practices for reliability, maintainability, scalability, and observability
 
-  4. Google — Software Engineer II, L3 — September 2016 – February 2020
+  4. Google — Software Engineer II, L3 — Mountain View, CA — September 2016 – February 2020
      Ground truth:
      - Developed machine learning platforms and cloud-based AI services
      - Contributed to Contact Center AI systems and integrations
