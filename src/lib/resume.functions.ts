@@ -77,6 +77,7 @@ GLOBAL RULES:
 SUMMARY RULES (IMPORTANT):
 - Keep the summary SIMPLE and NORMAL. Plain, calm, human tone. 2-3 short sentences.
 - Do NOT stuff JD keywords into the summary. Do NOT tailor the summary aggressively to the job description.
+- Do NOT mention a Master's degree, graduate degree, or any specific degree in the summary.
 - State experience level, general focus area (full-stack AI/ML engineering, LLMs, cloud), and career background at a high level only.
 
 SKILLS RULES:
