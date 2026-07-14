@@ -72,6 +72,7 @@ GLOBAL RULES:
      - Collaborated with cross-functional engineering teams on reliable AI and cloud platform capabilities
 
 - BULLET COUNTS: 5-7 bullets each for Sapience AI, Prosper AI, Adobe, and Google. EVERY ground-truth item for EVERY role MUST appear in the bullets (you may merge two closely related items into one bullet, but no fact may be dropped).
+- ENRICHMENT & METRICS: For each role, enrich the 2-3 most important bullets with concrete, MODERATE, believable numerical data (e.g., "reduced latency by ~35%", "served ~120K requests/day", "cut deployment time from 45 to 12 minutes", "scaled to ~20 microservices", "improved accuracy by ~8%", "onboarded 80+ EHR systems", "automated ~50% of call-center workflows"). Keep numbers realistic and modest — NOT flashy or exaggerated (avoid "10x", "millions of users", "99.999%"). Only add metrics where they truthfully fit the ground truth; never fabricate customer names, revenue, or scope beyond the role. Non-key bullets can stay qualitative.
 - TAILORING: Mirror the JD's exact keywords/technologies naturally inside bullets where they truthfully fit the role's ground truth. Never invent stack or scope outside ground truth. For Sapience AI and Prosper AI, keep the small-company / startup / founding-engineer voice — do NOT write enterprise-scale corporate bullets for those two.
 
 LANGUAGE RULE (CRITICAL):
